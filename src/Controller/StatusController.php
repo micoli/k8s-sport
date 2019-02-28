@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class StatusController extends Controller
 {
+    function __construct(){
+    }
     /**
      * @Route("/")
      */
@@ -15,4 +17,5 @@ class StatusController extends Controller
     {
         return new JsonResponse(['test'=>1]);
     }
+
 }

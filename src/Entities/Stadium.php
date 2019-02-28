@@ -17,4 +17,8 @@ class Stadium implements StadiumInterface
         return $this->dimension;
     }
 
+    public function getCenter(): Point
+    {
+        return new Point($this->dimension->getWidth() / 2, $this->dimension->getHeight() / 2);
+    }
 }

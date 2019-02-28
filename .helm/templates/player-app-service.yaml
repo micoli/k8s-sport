@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: player-php
+  labels:
+    app: player-php
+spec:
+  selector:
+    app: player-php
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

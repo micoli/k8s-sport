@@ -35,3 +35,8 @@ services:
         arguments:
            - 80
            - 100
+
+    App\Services\Data:
+        public: true
+        arguments:
+            - "/tmp/data.txt"

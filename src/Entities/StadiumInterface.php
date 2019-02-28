@@ -6,4 +6,5 @@ interface StadiumInterface
 {
 
     public function getDimension(): DimensionInterface;
+
 }

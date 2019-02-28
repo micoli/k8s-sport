@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ball-php
+  labels:
+    app: ball-php
+spec:
+  selector:
+    app: ball-php
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

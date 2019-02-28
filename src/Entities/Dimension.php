@@ -30,4 +30,15 @@ class Dimension implements DimensionInterface
     {
         return [$this->width, $this->height];
     }
+
+    public function getWidth()
+    {
+        return $this->width;
+    }
+
+    public function getHeight()
+    {
+        return $this->height;
+    }
+
 }

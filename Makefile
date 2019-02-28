@@ -29,7 +29,10 @@ skaffold-run:
 	_CI_COMMIT_SHA=$(git_sha) skaffold run
 
 shell:
-	kubectl exec -it $$(kubectl get pods --field-selector=status.phase=Running -o=jsonpath='{.items[*].metadata.name}' -l app=v1-k8s-sport-php-app) sh
+	kubectl exec -it $$(kubectl get pods --field-selector=status.phase=Running -o=jsonpath='{.items[0].metadata.name}' -l app=player-php) sh
+
+shell-ball:
+	kubectl exec -it $$(kubectl get pods --field-selector=status.phase=Running -o=jsonpath='{.items[0].metadata.name}' -l app=ball-php) sh
 
 port-forward:
 	kubectl port-forward $$(kubectl get pods --field-selector=status.phase=Running -o=jsonpath='{.items[*].metadata.name}' -l app=v1-k8s-sport-php-app) 8002:80

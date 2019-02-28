@@ -2,9 +2,10 @@
 
 namespace App\Command;
 
+use App\Entities\Ball;
+use App\Entities\Player;
 use App\Entities\StadiumInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -12,10 +13,16 @@ class RunCommand extends ContainerAwareCommand
 {
     /** @var StadiumInterface */
     private $stadium;
+    /** @var PlayerInterface */
+    private $player;
+    /** @var BallInterface */
+    private $ball;
 
-    public function __construct(StadiumInterface $stadium)
+    public function __construct(StadiumInterface $stadium,Ball $ball, Player $player)
     {
         $this->stadium = $stadium;
+        $this->ball = $ball;
+        $this->player = $player;
         parent::__construct();
     }
 
@@ -29,14 +36,16 @@ class RunCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $type = getEnv('type');
-
-        print_r([$this->stadium->getDimension(),$type]);
-
-        while (true){
-            $output->writeln(sprintf("reading %s", $filename ?? "nonamea"));
-            sleep(5);
+        $type = getEnv('APP_TYPE');
+        switch($type){
+            case 'ball':
+                $this->ball->run();
+            break;
+            case 'player':
+                $this->player->run();
+            break;
         }
+        sleep(5);
     }
 }
 
