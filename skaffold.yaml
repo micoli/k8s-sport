@@ -36,7 +36,7 @@ build:
       '.env': /application/.env
 
 test:
-  - image: registry.gitlab.com/micoli/skaffold-ci-sandbox-php
+  - image: registry.gitlab.com/micoli/k8s-sport
     structureTests:
     - ./tests/skaffold/*
 
