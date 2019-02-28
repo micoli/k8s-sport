@@ -1,0 +1,8 @@
+#!/bin/sh
+
+exec 2>&1
+source /env
+
+cd /application
+
+exec bin/console application:run

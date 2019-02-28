@@ -2,7 +2,7 @@ schemaVersion: 2.0.0
 
 fileExistenceTests:
   - name: 'php present'
-    path: /usr/local/bin/php
+    path: /usr/bin/php
     shouldExist: true
 
   - name: 'autoload done'
@@ -26,4 +26,4 @@ commandTests:
     #setup: [["cd", "/application"]]
     command: "bin/console"
     args: []
-    expectedOutput: [".*application:test.*"]
+    expectedOutput: [".*application:run.*"]

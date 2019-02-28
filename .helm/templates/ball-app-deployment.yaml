@@ -1,0 +1,31 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-ball-php
+  labels:
+    app: ball-php
+    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
+    release: "{{ .Release.Name }}"
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ball-php
+  template:
+    metadata:
+      labels:
+        app: ball-php
+    spec:
+      containers:
+      - name: runner-php
+        image: {{ .Values.imageName }}
+        imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
+        env:
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-global-env
+              key: APP_ENV
+        - name: APP_TYPE
+          value: ball

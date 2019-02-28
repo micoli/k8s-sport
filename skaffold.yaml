@@ -6,6 +6,10 @@ profiles:
     build:
       tagPolicy:
         gitCommit: {}
+#    test:
+#      - image: registry.gitlab.com/micoli/k8s-sport
+#        structureTests:
+#          - ./tests/skaffold/disable-*
 
 build:
   tagPolicy:
@@ -35,10 +39,10 @@ build:
       '.php_cs.dist': /application/.php_cs.dist
       '.env': /application/.env
 
-test:
-  - image: registry.gitlab.com/micoli/skaffold-ci-sandbox-php
-    structureTests:
-    - ./tests/skaffold/*
+#test:
+#  - image: registry.gitlab.com/micoli/k8s-sport
+#    structureTests:
+#    - ./tests/skaffold/*
 
 
 deploy:

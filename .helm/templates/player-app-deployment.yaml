@@ -2,22 +2,21 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}-php-app
+  name: {{ template "fullname" . }}-player-php
   labels:
-    app: {{ template "fullname" . }}-php-app
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
+    app: player-php
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 2
+  selector:
+    matchLabels:
+      app: player-php
   template:
     metadata:
       labels:
-        app: {{ template "fullname" . }}-php-app
-        chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-        release: "{{ .Release.Name }}"
+        app: player-php
     spec:
       containers:
-      - name: {{ template "fullname" . }}-php-app
+      - name: runner-php
         image: {{ .Values.imageName }}
         imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
         env:
@@ -26,3 +25,5 @@ spec:
             configMapKeyRef:
               name: {{ template "fullname" . }}-global-env
               key: APP_ENV
+        - name: APP_TYPE
+          value: player
