@@ -1,0 +1,29 @@
+schemaVersion: 2.0.0
+
+fileExistenceTests:
+  - name: 'php present'
+    path: /usr/local/bin/php
+    shouldExist: true
+
+  - name: 'autoload done'
+    path: /application/vendor/autoload.php
+    shouldExist: true
+
+  - name: 'php tool : phpunit exists'
+    path: /application/vendor/bin/phpunit
+    shouldExist: true
+
+  - name: 'php tool : validate-json exists'
+    path: /application/vendor/bin/validate-json
+    shouldExist: true
+
+  - name: 'php tool : console exists'
+    path: /application/bin/console
+    shouldExist: true
+
+commandTests:
+  - name: "console working"
+    #setup: [["cd", "/application"]]
+    command: "bin/console"
+    args: []
+    expectedOutput: [".*application:test.*"]

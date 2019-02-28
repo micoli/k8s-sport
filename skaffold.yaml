@@ -1,0 +1,52 @@
+apiVersion: skaffold/v1beta5
+kind: Config
+
+profiles:
+  - name: dev
+    build:
+      tagPolicy:
+        gitCommit: {}
+
+build:
+  tagPolicy:
+    #sha256: {}
+    #gitCommit: {}
+    envTemplate:
+      template: "{{.IMAGE_NAME}}:{{._CI_COMMIT_SHA}}"
+
+  local:
+    push: false
+
+  artifacts:
+  - image: registry.gitlab.com/micoli/k8s-sport
+    context: .
+    docker:
+      buildArgs:
+        APP_ENV: dev
+    sync:
+      'bin/**': /application/bin
+      'config/**': /application/config
+      'public/**': /application/public
+      'src/**': /application/src
+      'tests/**': /application/tests
+      'Makefile': /application/Makefile
+
+      'phpunit.xml.dist': /application/phpunit.xml.dist
+      '.php_cs.dist': /application/.php_cs.dist
+      '.env': /application/.env
+
+test:
+  - image: registry.gitlab.com/micoli/skaffold-ci-sandbox-php
+    structureTests:
+    - ./tests/skaffold/*
+
+
+deploy:
+  helm:
+    releases:
+    - name: v1
+      chartPath: .helm
+      valuesFiles:
+      - .helm/values.yaml
+      values:
+        imageName: registry.gitlab.com/micoli/k8s-sport

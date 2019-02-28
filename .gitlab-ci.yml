@@ -1,0 +1,22 @@
+image: micoli/skaffold-ci:latest
+
+services:
+  - docker:dind
+
+stages:
+  - test
+
+variables:
+  _CI_USER: gitlab-ci-token
+  _CI_PASSWORD: $CI_JOB_TOKEN
+  _CI_COMMIT_SHA: $CI_COMMIT_SHA
+  DOCKER_HOST: tcp://docker:2375/
+  DOCKER_DRIVER: overlay
+
+test:
+  script:
+  - ls -la /var/run/
+  - cp .env.dist .env
+  - docker login -u $_CI_USER -p $_CI_PASSWORD registry.gitlab.com
+  - make skaffold-run
+  - docker push registry.gitlab.com/micoli/skaffold-ci-sandbox-php:$_CI_COMMIT_SHA
