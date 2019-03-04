@@ -18,11 +18,28 @@ class BallController extends Controller
     }
 
     /**
-     * @Route("/ball/position")
+     * @Route("/ball/position",methods={"GET"})
      */
     public function position()
     {
+        $this->ball->load();
+        return new JsonResponse([
+            'x' => $this->ball->getPosition()->getX(),
+            'y' => $this->ball->getPosition()->getY()
+        ]);
+    }
 
-        return new JsonResponse(['x' => $this->ball->getPosition()->getY(),'y' => $this->ball->getPosition()->getY()]);
+    /**
+     * @Route("/ball/hit/{x}/{y}/{strength}",methods={"PUT"})
+     */
+    public function hitFrom($x,$y,$strength)
+    {
+        $this->ball->load();
+        $this->ball->hitFrom(new Point($x,$y),$strength);
+
+        return new JsonResponse([
+            'x' => $this->ball->getPosition()->getX(),
+            'y' => $this->ball->getPosition()->getY()
+        ]);
     }
 }

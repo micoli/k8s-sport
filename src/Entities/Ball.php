@@ -3,7 +3,7 @@
 namespace App\Entities;
 
 use App\Infrastructure\HttpClientInterface;
-use App\Services\Data;
+use App\Infrastructure\Data;
 use Ramsey\Uuid\Uuid;
 
 class Ball implements MovableInterface
@@ -13,38 +13,71 @@ class Ball implements MovableInterface
     /** @var Point */
     private $position;
 
+    private $speed = 0;
+
+    private $angle = 0;
+
     /** @var Stadium */
-    private $stadium;
+    private $dimension;
 
     private $httpClient;
 
     /** @var Data */
     private $data;
 
-    public function __construct(HttpClientInterface $httpClient, Data $data,StadiumInterface $stadium)
+    public function __construct(HttpClientInterface $httpClient, Data $data, Dimension $dimension)
     {
         $this->httpClient = $httpClient;
         $this->data = $data;
-        $this->stadium = $stadium;
-        $this->load();
+        $this->dimension = $dimension;
     }
 
-    private function load()
+    public function load()
     {
-        $dto = $this->data->get();
+        $this->fromStruct($this->data->load());
+    }
+
+    public function fromStruct($dto)
+    {
         $this->uuid = isset($dto->uuid) ? $dto->uuid : Uuid::uuid4();
-        $this->position = isset($dto->position) ? new Point($dto->position->x, $dto->position->x) : $this->stadium->getCenter();
+        $this->speed = isset($dto->speed) ? $dto->speed : 0;
+        $this->angle = isset($dto->angle) ? $dto->angle : 0;
+        $this->position = isset($dto->position) ? new Point($dto->position->x, $dto->position->y) : $this->dimension->getCenter();
+    }
+
+    public function toStruct()
+    {
+        return [
+            'uuid' => $this->uuid,
+            'speed' => $this->speed,
+            'angle' => $this->angle,
+            'position' => [
+                'x' => $this->getPosition()->getX(),
+                'y' => $this->getPosition()->getY()
+            ]
+        ];
+    }
+
+    public function hitFrom(Point $fromPoint, $strength)
+    {
+        if ($this->position->distanceTo($fromPoint) < 2 && $strength > 0) {
+            $attackAngle = rad2deg(atan2($fromPoint->getY() - $this->getPosition()->getY(), $fromPoint->getX() - $this->getPosition()->getX()));
+            $this->angle = $this->position->move($attackAngle, $strength, $this->stadium->getDimension()->getWidth(), $this->stadium->getDimension()->getHeight());
+            $this->speed = $strength - 0.5;
+            $this->save();
+        }
     }
 
     private function save()
     {
-        $this->data->save([
-            'uuid' => $this->uuid,
-            'point' => [
-                'x'=> $this->getPosition()->getX(),
-                'y'=> $this->getPosition()->getY()
-            ]
-        ]);
+        $this->data->save($this->toStruct());
+        $this->httpClient->send('PUT', 'http://stadium-php/stadium/ball', $this->toStruct());
+    }
+
+    public function setUUID($uuid)
+    {
+        $this->uuid = $uuid;
+        return $this;
     }
 
     public function getUUID(): string
@@ -52,17 +85,23 @@ class Ball implements MovableInterface
         return $this->uuid;
     }
 
+    public function setPosition($x, $y)
+    {
+        $this->position = new point($x, $y);
+        return $this;
+    }
+
     public function getPosition(): Point
     {
         return $this->position;
     }
 
-    public function setPosition($x, $y)
+    public function run()
     {
-        return $this->position->setCoord($x, $y);
-    }
-
-    public function run(){
-
+        if ($this->speed > 0) {
+            $this->angle = $this->position->move($this->angle, $this->speed, $this->stadium->getDimension()->getWidth(), $this->stadium->getDimension()->getHeight());
+            $this->speed = $this->speed - 0.5;
+        }
+        $this->save();
     }
 }

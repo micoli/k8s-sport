@@ -5,8 +5,6 @@ metadata:
   name: {{ template "fullname" . }}-ball-php
   labels:
     app: ball-php
-    chart: "{{ .Chart.Name }}-{{ .Chart.Version }}"
-    release: "{{ .Release.Name }}"
 spec:
   replicas: 1
   selector:
@@ -16,6 +14,7 @@ spec:
     metadata:
       labels:
         app: ball-php
+        resetable: data
     spec:
       containers:
       - name: runner-php

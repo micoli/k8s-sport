@@ -10,12 +10,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class PlayerController extends Controller
 {
-    /** @var @Ball $player */
+    /** @var @Player $player */
     var $player;
 
     function __construct(Player $player)
     {
         $this->player = $player;
+        $this->player->load();
     }
 
     /**
@@ -23,7 +24,6 @@ class PlayerController extends Controller
      */
     public function position()
     {
-
         return new JsonResponse(['x' => $this->player->getPosition()->getY(),'y' => $this->player->getPosition()->getY()]);
     }
 }

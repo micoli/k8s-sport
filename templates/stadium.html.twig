@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Stadium</title>
+        <meta http-equiv="refresh" content="1;URL=.">
+    </head>
+    <body>
+        <h1>Stadium</h1>
+        <h2>Players</h2>
+        <ul id="players">
+            {% for player in players %}
+                {{ player.getUUID() }} :: {{ player.getPosition().getX() }} / {{ player.getPosition().getY() }}
+            {% endfor %}
+        </ul>
+        <h2>Balls</h2>
+        <ul id="balls">
+            {% for ball in balls %}
+                {{ ball.getUUID() }} :: {{ ball.getPosition().getX() }} / {{ ball.getPosition().getY() }}
+            {% endfor %}
+        </ul>
+        <div style="width:{{ dimension.getWidth()*4 }}px;height:{{ dimension.getHeight()*4 }}px;background-color: seagreen;border:1px solid black;position:relative">
+            {% for player in players %}
+                <div style="width:10px;height:10px;background-color:red;position:absolute;left:{{ player.getPosition().getX()*4 }};top:{{  player.getPosition().getY()*4 }} "></div>
+            {% endfor %}
+            {% for ball in balls %}
+                <div style="width:10px;height:10px;background-color:blue;position:absolute;left:{{ ball.getPosition().getX()*4 }};top:{{  ball.getPosition().getY()*4 }}"></div>
+            {% endfor %}
+        </div>
+    </body>
+</html>

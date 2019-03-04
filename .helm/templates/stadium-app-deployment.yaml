@@ -2,22 +2,23 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}-player-php
+  name: {{ template "fullname" . }}-stadium-php
   labels:
-    app: player-php
+    app: stadium-php
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: player-php
+      app: stadium-php
   template:
     metadata:
       labels:
-        app: player-php
+        app: stadium-php
         resetable: data
     spec:
       containers:
       - name: runner-php
+        containerPort: 8882
         image: {{ .Values.imageName }}
         imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
         env:
@@ -27,4 +28,4 @@ spec:
               name: {{ template "fullname" . }}-global-env
               key: APP_ENV
         - name: APP_TYPE
-          value: player
+          value: stadium
