@@ -20,6 +20,11 @@ class Dimension implements DimensionInterface
         $this->setValues($width, $height);
     }
 
+    public function getCenter(): Point
+    {
+        return new Point($this->getWidth() / 2, $this->getHeight() / 2);
+    }
+
     public function setValues($width, $height)
     {
         $this->width = $width;

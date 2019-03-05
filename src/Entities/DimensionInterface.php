@@ -16,4 +16,5 @@ interface DimensionInterface
     public function getCoord():array;
     public function getWidth();
     public function getHeight();
+    public function getCenter(): Point;
 }

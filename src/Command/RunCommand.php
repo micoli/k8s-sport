@@ -18,7 +18,7 @@ class RunCommand extends ContainerAwareCommand
     /** @var BallInterface */
     private $ball;
 
-    public function __construct(StadiumInterface $stadium,Ball $ball, Player $player)
+    public function __construct(StadiumInterface $stadium, Ball $ball, Player $player)
     {
         $this->stadium = $stadium;
         $this->ball = $ball;
@@ -30,22 +30,25 @@ class RunCommand extends ContainerAwareCommand
     {
         $this
             ->setName('application:run')
-            ->setDescription('run an entity forever')
-            ;
+            ->setDescription('run an entity forever');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $type = getEnv('APP_TYPE');
-        switch($type){
-            case 'ball':
-                $this->ball->run();
-            break;
-            case 'player':
-                $this->player->run();
-            break;
+        for ($i=0;$i<2;$i++){
+            $type = getEnv('APP_TYPE');
+            switch ($type) {
+                case 'ball':
+                    $this->ball->load();
+                    $this->ball->run();
+                    break;
+                case 'player':
+                    $this->player->load();
+                    $this->player->run();
+                    break;
+            }
+            sleep(0.2);
         }
-        sleep(5);
     }
 }
 

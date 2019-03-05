@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Services;
+namespace App\Infrastructure;
 
 
 class Data
@@ -12,7 +12,7 @@ class Data
         $this->dataPath = $dataPath;
     }
 
-    public function get()
+    public function load()
     {
         if (file_exists($this->dataPath)) {
             return json_decode(file_get_contents($this->dataPath));
@@ -20,8 +20,8 @@ class Data
         return new \StdClass();
     }
 
-    public function set($data)
+    public function save($data)
     {
-        return file_get_contents($this->dataPath, json_encode($data));
+        return file_put_contents($this->dataPath, json_encode($data));
     }
 }

@@ -21,6 +21,7 @@ COPY bin bin
 COPY config config
 COPY public public
 COPY src src
+COPY templates templates
 COPY tests tests
 
 COPY Makefile ./
@@ -28,4 +29,10 @@ COPY phpunit.xml.dist ./
 COPY .php_cs.dist ./
 COPY .env ./
 
-RUN composer dump-autoload; mkdir var; chmod 777 var
+RUN composer dump-autoload; \
+    mkdir var; \
+     chmod 777 var; \
+     bin/console cache:warmup; \
+     rm -f /var/log/nginx/access.log;
+     #rm -f /var/log/nginx/error.log
+

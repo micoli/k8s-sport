@@ -1,4 +1,5 @@
 git_sha := $(shell git rev-parse HEAD)
+SHELL:=/bin/bash
 
 .PHONY: coverage infection integration it test
 
@@ -42,3 +43,6 @@ gitlab-runner-test:
 
 gitlab-runner-shell:
 	docker exec -it $$(docker ps --format "{{.Names}}" | grep runner | grep build) sh
+
+reset-game:
+	@for pod in $$(kubectl get pods -o name | cut -d '/' -f2); do echo $$pod; kubectl exec $$pod -- rm /tmp/data.txt;done

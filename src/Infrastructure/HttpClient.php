@@ -7,16 +7,28 @@
  */
 
 namespace App\Infrastructure;
+
 use \GuzzleHttp\Client;
+use GuzzleHttp\Exception\RequestException;
 
 class HttpClient implements HttpClientInterface
 {
 
-    public function send($method,$url,$payload){
-        $client = new Client();
-        $response = $client->request($method,$url);
+    public function send($method, $url, $payload)
+    {
+        try{
+            $client = new Client();
+            if ($payload === null) {
+                $response = $client->request($method, $url);
+            } else {
+                $response = $client->request($method, $url, ['json'=>$payload]);
+            }
 
-        return json_decode($response->getBody()->getContents());
+            //print $response->getBody()->getContents();
+            return json_decode($response->getBody()->getContents());
+        }catch(RequestException $e){
+            return null;//print $e->getResponse()->getBody()->getContents();
+        }
     }
     /*
     $client = new \GuzzleHttp\Client();

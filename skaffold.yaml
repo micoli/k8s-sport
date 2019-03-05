@@ -32,6 +32,7 @@ build:
       'config/**': /application/config
       'public/**': /application/public
       'src/**': /application/src
+      'templates/**': /application/templates
       'tests/**': /application/tests
       'Makefile': /application/Makefile
 
