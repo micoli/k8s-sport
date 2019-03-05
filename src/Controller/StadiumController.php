@@ -48,9 +48,10 @@ class StadiumController extends Controller
     /**
      * @Route("/stadium/ball", methods={"PUT"})
      */
-    public function postBall(Request $request, Ball $ball)
+    public function postBall(Request $request, Ball $ball, Stadium $stadium)
     {
         if ($content = $request->getContent()) {
+            $stadium->load();
             $jsonData = json_decode($content);
 
             $ball->setUUID($jsonData->uuid);
@@ -67,6 +68,7 @@ class StadiumController extends Controller
      */
     public function deleteBall(Stadium $stadium, $id)
     {
+        $stadium->load();
         $stadium->removeBall($id);
 
         return new JsonResponse(['success' => true]);
@@ -78,6 +80,7 @@ class StadiumController extends Controller
     public function postPlayer(Request $request, Player $player, Stadium $stadium)
     {
         if ($content = $request->getContent()) {
+            $stadium->load();
             $jsonData = json_decode($content);
 
             $player->setUUID($jsonData->uuid);
@@ -95,6 +98,7 @@ class StadiumController extends Controller
      */
     public function deletePlayer(Stadium $stadium, $id)
     {
+        $stadium->load();
         $stadium->removePlayer($id);
 
         return new JsonResponse(['success' => true]);

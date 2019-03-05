@@ -27,7 +27,8 @@ class HttpClient implements HttpClientInterface
             //print $response->getBody()->getContents();
             return json_decode($response->getBody()->getContents());
         }catch(RequestException $e){
-            return null;//print $e->getResponse()->getBody()->getContents();
+            //print $e->getResponse()->getBody()->getContents();
+            return null;//
         }
     }
     /*

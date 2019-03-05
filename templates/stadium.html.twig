@@ -22,13 +22,13 @@
         #}
         <div style="width:{{ dimension.getWidth()*4 }}px;height:{{ dimension.getHeight()*4 }}px;background-color: seagreen;border:1px solid black;position:relative">
             {% for player in players %}
-                <div style="font-size:12px;width:10px;height:10px;background-color:red;position:absolute;left:{{ player.getPosition().getX()*4 }}px;top:{{  player.getPosition().getY()*4 }}px ">
+                <div style="font-size:12px;width:10px;height:10px;background-color:{{ player.team }};position:absolute;left:{{ player.getPosition().getX()*4 }}px;top:{{  player.getPosition().getY()*4 }}px ">
                     <br>{{ player.getPosition().getX() |number_format(2, '.') }}x{{  player.getPosition().getY()|number_format(2, '.') }}
                 </div>
             {% endfor %}
 
             {% for ball in balls %}
-                <div style="font-size:12px;width:10px;height:10px;background-color:blue;position:absolute;left:{{ ball.getPosition().getX()*4 }}px;top:{{  ball.getPosition().getY()*4 }}px">
+                <div style="font-size:12px;width:10px;height:10px;background-color:orange;position:absolute;left:{{ ball.getPosition().getX()*4 }}px;top:{{  ball.getPosition().getY()*4 }}px">
                     <br>{{ ball.getPosition().getX()|number_format(2, '.') }}x{{  ball.getPosition().getY()|number_format(2, '.') }}
                 </div>
             {% endfor %}

@@ -83,7 +83,7 @@ class Ball implements MovableInterface
 
     public function setPosition($x, $y)
     {
-        $this->position = new point($x, $y);
+        $this->position = new Point($x, $y);
         return $this;
     }
 

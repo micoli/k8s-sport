@@ -2,11 +2,11 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}-player-php
+  name: {{ template "fullname" . }}-player-blue-php
   labels:
     app: player-php
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
       app: player-php
@@ -15,6 +15,7 @@ spec:
       labels:
         app: player-php
         resetable: data
+        team: blue
     spec:
       containers:
       - name: runner-php
@@ -28,3 +29,38 @@ spec:
               key: APP_ENV
         - name: APP_TYPE
           value: player
+        - name: APP_TEAM
+          value: blue
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-player-red-php
+  labels:
+    app: player-php
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: player-php
+  template:
+    metadata:
+      labels:
+        app: player-php
+        resetable: data
+        team: red
+    spec:
+      containers:
+      - name: runner-php
+        image: {{ .Values.imageName }}
+        imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
+        env:
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-global-env
+              key: APP_ENV
+        - name: APP_TYPE
+          value: player
+        - name: APP_TEAM
+          value: red

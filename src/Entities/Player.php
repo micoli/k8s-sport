@@ -15,6 +15,7 @@ class Player implements MovableInterface, PlayerInterface
     private $speed = 3;
     private $random = 0.3;
 
+    private $team;
 
     private $name;
 
@@ -46,6 +47,7 @@ class Player implements MovableInterface, PlayerInterface
     {
         $this->uuid = isset($dto->uuid) ? $dto->uuid : Uuid::uuid4();
         $this->name = isset($dto->name) ? $dto->name : 'name';
+        $this->team = isset($dto->team) ? $dto->team : getenv('APP_TEAM');
         $this->position = isset($dto->position) ? new Point($dto->position->x, $dto->position->y) : new Point(0, 0);
         return $this;
     }
@@ -55,6 +57,7 @@ class Player implements MovableInterface, PlayerInterface
         return [
             'uuid' => $this->uuid,
             'name' => $this->name,
+            'team' => $this->team,
             'position' => [
                 'x' => $this->getPosition()->getX(),
                 'y' => $this->getPosition()->getY()
@@ -91,6 +94,17 @@ class Player implements MovableInterface, PlayerInterface
         return $this->name;
     }
 
+    public function setTeam($team)
+    {
+        $this->team = $team;
+        return $this;
+    }
+
+    public function getTeam(): string
+    {
+        return $this->team;
+    }
+
     public function setPosition($x, $y)
     {
         $this->position = new Point($x, $y);
@@ -120,14 +134,15 @@ class Player implements MovableInterface, PlayerInterface
         $this->log->info(sprintf('player hit ball'));
         $this->httpClient->send('PUT', sprintf('http://ball-php/ball/hitto/%s/%s/%s/%s/%s',
             40,
-            5,
+            $this->team == 'blue' ? 5 : (100 - 5),
             5,
             $this->getUUID(),
             $this->getName()
         ), null);
     }
 
-    private function hitBallFrom(PointInterface $ballPosition){
+    private function hitBallFrom(PointInterface $ballPosition)
+    {
         $this->log->info(sprintf('player hit ball'));
         $this->httpClient->send('PUT', sprintf('http://ball-php/ball/hit/%s/%s/%s/%s/%s',
             $this->getPosition()->getX(),
@@ -135,7 +150,7 @@ class Player implements MovableInterface, PlayerInterface
             5,
             $this->getUUID(),
             $this->getName()
-        ),null);
+        ), null);
     }
 
     private function getDistancedToHit()
