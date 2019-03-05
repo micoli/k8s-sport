@@ -15,60 +15,67 @@ class StadiumController extends Controller
     /** @var @Stadium $stadium */
     var $stadium;
 
-    function __construct(Stadium $stadium)
+    function __construct()
     {
-        $this->stadium = $stadium;
-        $this->stadium->load();
     }
 
     /**
      * @Route("/")
      * @Route("/stadium")
      */
-    public function default()
+    public function default(Stadium $stadium)
     {
-        print_r([
-            'players' => $this->stadium->getPlayers(),
-            'balls' => $this->stadium->getBalls()
-        ]);
+        $stadium->load();
         return $this->render('stadium.html.twig', [
-            'players' => $this->stadium->getPlayers(),
-            'balls' => $this->stadium->getBalls(),
-            'dimension' => $this->stadium->getDimension()
+            'players' => $stadium->getPlayers(),
+            'balls' => $stadium->getBalls(),
+            'dimension' => $stadium->getDimension()
+        ]);
+    }
+
+    /**
+     * @Route("/stadium/dimension")
+     */
+    public function getDimension(Stadium $stadium)
+    {
+        $stadium->load();
+
+        return new JsonResponse([
+            'dimension' => $stadium->getDimension()
         ]);
     }
 
     /**
      * @Route("/stadium/ball", methods={"PUT"})
      */
-    public function postBall(Request $request,Ball $ball)
+    public function postBall(Request $request, Ball $ball)
     {
         if ($content = $request->getContent()) {
             $jsonData = json_decode($content);
 
             $ball->setUUID($jsonData->uuid);
             $ball->setPosition($jsonData->position->x, $jsonData->position->y);
-            $this->stadium->setBall($ball);
+            $stadium->setBall($ball);
 
-            return new JsonResponse(['success'=>true]);
+            return new JsonResponse(['success' => true]);
         }
-        return new JsonResponse(['success'=>false], 500);
+        return new JsonResponse(['success' => false], 500);
     }
 
     /**
      * @Route("/stadium/ball/{id}", methods={"DELETE"})
      */
-    public function deleteBall($id)
+    public function deleteBall(Stadium $stadium, $id)
     {
-        $this->stadium->removeBall($id);
+        $stadium->removeBall($id);
 
-        return new JsonResponse(['success'=>true]);
+        return new JsonResponse(['success' => true]);
     }
 
     /**
      * @Route("/stadium/player", methods={"PUT"})
      */
-    public function postPlayer(Request $request,Player $player)
+    public function postPlayer(Request $request, Player $player, Stadium $stadium)
     {
         if ($content = $request->getContent()) {
             $jsonData = json_decode($content);
@@ -76,21 +83,21 @@ class StadiumController extends Controller
             $player->setUUID($jsonData->uuid);
             $player->setName($jsonData->name);
             $player->setPosition($jsonData->position->x, $jsonData->position->y);
-            $this->stadium->setPlayer($player);
+            $stadium->setPlayer($player);
 
-            return new JsonResponse(['success'=>true]);
+            return new JsonResponse(['success' => true]);
         }
-        return new JsonResponse(['success'=>false], 500);
+        return new JsonResponse(['success' => false], 500);
     }
 
     /**
      * @Route("/stadium/player/{id}", methods={"DELETE"})
      */
-    public function deletePlayer($id)
+    public function deletePlayer(Stadium $stadium, $id)
     {
-        $this->stadium->removePlayer($id);
+        $stadium->removePlayer($id);
 
-        return new JsonResponse(['success'=>true]);
+        return new JsonResponse(['success' => true]);
     }
 
 }

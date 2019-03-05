@@ -23,10 +23,10 @@ class Stadium implements StadiumInterface
 
     public function __construct(DimensionInterface $dimension, Data $data, BallFactory $ballFactory, PlayerFactory $playerFactory)
     {
-        $this->dimension = $dimension;
         $this->data = $data;
         $this->ballFactory = $ballFactory;
         $this->playerFactory = $playerFactory;
+        $this->dimension = $dimension;
     }
 
     public function load()
@@ -54,17 +54,22 @@ class Stadium implements StadiumInterface
                 $this->setPlayer($player);
             }
         }
+        $this->dimension = isset($dto->dimension) ? new Dimension($dto->dimension->width, $dto->dimension->height) : new Dimension(80, 100);
     }
 
     private function save()
     {
         $this->data->save([
-            'balls' => array_map(function(Ball $ball){
+            'balls' => array_map(function (Ball $ball) {
                 return $ball->toStruct();
-            },$this->balls),
-            'players' => array_map(function(Player $player){
+            }, $this->balls),
+            'players' => array_map(function (Player $player) {
                 return $player->toStruct();
-            },$this->players)
+            }, $this->players),
+            'dimension' => [
+                'width' => $this->dimension->getWidth(),
+                'height' => $this->dimension->getHeight()
+            ]
         ]);
     }
 
@@ -115,4 +120,5 @@ class Stadium implements StadiumInterface
     {
         return $this->players;
     }
+
 }

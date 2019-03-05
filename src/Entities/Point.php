@@ -70,7 +70,7 @@ class Point implements PointInterface
 
     public function fromRaw($struct)
     {
-        if(isset($struct->x) && isset($struct->y)){
+        if (isset($struct->x) && isset($struct->y)) {
             $this->setCoord($struct->x, $struct->y);
         }
     }
@@ -82,23 +82,30 @@ class Point implements PointInterface
 
     public function move($angle, $strength, $contraintWidth, $contraintHeight)
     {
-        $this->shiftX($strength * cos($angle * M_PI / 180));
-        $this->shiftY($strength * sin($angle * M_PI / 180));
+        $nb = 0;
+        do {
+            print sprintf("%sx%s\n", $this->getY(), $this->getX());
+            $this->shiftX($strength * cos(deg2rad($angle)));
+            $this->shiftY($strength * sin(deg2rad($angle)));
 
-        if ($this->getX() < 0 || $this->getX() > $contraintWidth) {
-            $angle = 180 - $angle;
-        } else if ($this->getY() < 0 || $this->getY() > $contraintHeight) {
-            $angle = 360 - $angle;
-        }
+            if ($this->getX() < 0 || $this->getX() > $contraintWidth) {
+                $angle = 180 - $angle;
+            } else if ($this->getY() < 0 || $this->getY() > $contraintHeight) {
+                $angle = 360 - $angle;
+            }
+            if ($nb++ > 10) {
+                break;
+            }
+        } while (!($this->getX() > 0 && $this->getX() < $contraintWidth && $this->getY() > 0 && $this->getY() < $contraintHeight));
+
         return $angle;
     }
 
     public function moveTowards(PointInterface $finalPosition, $step)
     {
-
         $distance = $this->distanceTo($finalPosition);
 
-        if($distance<=$step){
+        if ($distance <= $step) {
             $this->setCoord($finalPosition->getX(), $finalPosition->getY());
             return 0;
         }
@@ -112,4 +119,8 @@ class Point implements PointInterface
         return $step;
     }
 
+    public function getAngleBetween(Point $fromPoint)
+    {
+        return rad2deg(atan2($this->getY() - $fromPoint->getY(), $this->getX() - $fromPoint->getX()));
+    }
 }

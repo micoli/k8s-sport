@@ -32,7 +32,7 @@ COPY .env ./
 RUN composer dump-autoload; \
     mkdir var; \
      chmod 777 var; \
-     bin/console cache:warmup; \
-     rm -f /var/log/nginx/access.log;
+     bin/console cache:warmup;
+     #rm -f /var/log/nginx/access.log;
      #rm -f /var/log/nginx/error.log
 

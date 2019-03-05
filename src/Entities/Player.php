@@ -3,24 +3,26 @@
 namespace App\Entities;
 
 use App\Infrastructure\Data;
-use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use App\Infrastructure\HttpClientInterface;
+use Psr\Log\LoggerInterface;
 
 
 class Player implements MovableInterface, PlayerInterface
 {
     private $uuid;
 
-    private $speed = 4;
+    private $speed = 3;
     private $random = 0.3;
 
-    /** @var Point */
-    private $position;
 
     private $name;
 
+    /** @var HttpClientInterface */
     private $httpClient;
+
+    /** @var Point */
+    private $position;
 
     /** @var Data */
     private $data;
@@ -28,7 +30,7 @@ class Player implements MovableInterface, PlayerInterface
     /** @var LoggerInterface */
     var $log;
 
-    public function __construct(HttpClientInterface $httpClient, Data $data,LoggerInterface $log)
+    public function __construct(HttpClientInterface $httpClient, Data $data, LoggerInterface $log)
     {
         $this->httpClient = $httpClient;
         $this->data = $data;
@@ -43,7 +45,7 @@ class Player implements MovableInterface, PlayerInterface
     public function fromStruct($dto)
     {
         $this->uuid = isset($dto->uuid) ? $dto->uuid : Uuid::uuid4();
-        $this->name = isset($dto->name) ? $dto->name : '';
+        $this->name = isset($dto->name) ? $dto->name : 'name';
         $this->position = isset($dto->position) ? new Point($dto->position->x, $dto->position->y) : new Point(0, 0);
         return $this;
     }
@@ -102,43 +104,62 @@ class Player implements MovableInterface, PlayerInterface
 
     public function run()
     {
-        $this->log->debug(sprintf('player run %sx%s',$this->getPosition()->getX(),$this->getPosition()->getY()));
         $ballPosition = new Point(0, 0);
         $ballPosition->fromRaw($this->httpClient->send('GET', 'http://ball-php/ball/position', null));
         $this->moveTowards($ballPosition);
+        $this->log->info(sprintf('player run %sx%s, ball :%sx%s',
+            $this->getPosition()->getX(),
+            $this->getPosition()->getY(),
+            $ballPosition->getX(),
+            $ballPosition->getY()
+        ));
     }
 
-    private function hitBall(PointInterface $ballPosition){
+    private function hitBall(PointInterface $ballPosition)
+    {
+        $this->log->info(sprintf('player hit ball'));
+        $this->httpClient->send('PUT', sprintf('http://ball-php/ball/hitto/%s/%s/%s/%s/%s',
+            40,
+            5,
+            5,
+            $this->getUUID(),
+            $this->getName()
+        ), null);
+    }
+
+    private function hitBallFrom(PointInterface $ballPosition){
+        $this->log->info(sprintf('player hit ball'));
         $this->httpClient->send('PUT', sprintf('http://ball-php/ball/hit/%s/%s/%s/%s/%s',
             $this->getPosition()->getX(),
             $this->getPosition()->getY(),
-            10,
+            5,
             $this->getUUID(),
             $this->getName()
         ),null);
     }
 
-    private function getDistancedToHit(){
+    private function getDistancedToHit()
+    {
         return 2;
     }
 
     private function moveTowards(PointInterface $ballPosition)
     {
-        $oldPosition = clone ($this->getPosition());
+        //$oldPosition = clone ($this->getPosition());
         $distanceDone = $this->position->moveTowards($ballPosition, $this->speed);
         //$this->position->shiftXY(random_int(-100*$this->random,100*$this->random)/100,random_int(-100*$this->random,100*$this->random)/100);
         $this->save();
 
-        if($this->position->distanceTo($ballPosition)<$this->getDistancedToHit()){
+        if ($this->position->distanceTo($ballPosition) < $this->getDistancedToHit()) {
             $this->hitBall($ballPosition);
         }
 
-        print (sprintf("(%0.2f,%0.2f) => (%0.2fx%0.2f) => (%0.2fx%0.2f)  @ %0.2f -\n",
+        /*$this->log->info(sprintf("move towards (%0.2f,%0.2f) => (%0.2fx%0.2f) => (%0.2fx%0.2f)  @ %0.2f -\n",
             $oldPosition->getX(), $oldPosition->getY(),
             $this->position->getX(), $this->position->getY(),
             $ballPosition->getX(), $ballPosition->getY(),
             $this->speed
-        ));
+        ));*/
     }
 
 }

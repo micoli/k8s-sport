@@ -13,8 +13,10 @@ class RunCommand extends ContainerAwareCommand
 {
     /** @var StadiumInterface */
     private $stadium;
+
     /** @var PlayerInterface */
     private $player;
+
     /** @var BallInterface */
     private $ball;
 
@@ -35,7 +37,7 @@ class RunCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        for ($i=0;$i<2;$i++){
+        for ($i = 0; $i < 2; $i++) {
             $type = getEnv('APP_TYPE');
             switch ($type) {
                 case 'ball':
