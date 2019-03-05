@@ -58,16 +58,6 @@ class Ball implements MovableInterface
         ];
     }
 
-    public function hitFrom(Point $fromPoint, $strength)
-    {
-        if ($this->position->distanceTo($fromPoint) < 2 && $strength > 0) {
-            $attackAngle = rad2deg(atan2($fromPoint->getY() - $this->getPosition()->getY(), $fromPoint->getX() - $this->getPosition()->getX()));
-            $this->angle = $this->position->move($attackAngle, $strength, $this->stadium->getDimension()->getWidth(), $this->stadium->getDimension()->getHeight());
-            $this->speed = $strength - 0.5;
-            $this->save();
-        }
-    }
-
     private function save()
     {
         $this->data->save($this->toStruct());
@@ -94,6 +84,16 @@ class Ball implements MovableInterface
     public function getPosition(): Point
     {
         return $this->position;
+    }
+
+    public function hitFrom(Point $fromPoint, $strength)
+    {
+        if ($this->position->distanceTo($fromPoint) < 2 && $strength > 0) {
+            $attackAngle = rad2deg(atan2($fromPoint->getY() - $this->getPosition()->getY(), $fromPoint->getX() - $this->getPosition()->getX()));
+            $this->angle = $this->position->move($attackAngle, $strength, $this->stadium->getDimension()->getWidth(), $this->stadium->getDimension()->getHeight());
+            $this->speed = $strength - 0.5;
+            $this->save();
+        }
     }
 
     public function run()

@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use App\Infrastructure\Data;
+use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Uuid;
 use App\Infrastructure\HttpClientInterface;
 
@@ -24,10 +25,14 @@ class Player implements MovableInterface, PlayerInterface
     /** @var Data */
     private $data;
 
-    public function __construct(HttpClientInterface $httpClient, Data $data)
+    /** @var LoggerInterface */
+    var $log;
+
+    public function __construct(HttpClientInterface $httpClient, Data $data,LoggerInterface $log)
     {
         $this->httpClient = $httpClient;
         $this->data = $data;
+        $this->log = $log;
     }
 
     public function load()
@@ -97,29 +102,34 @@ class Player implements MovableInterface, PlayerInterface
 
     public function run()
     {
+        $this->log->debug(sprintf('player run %sx%s',$this->getPosition()->getX(),$this->getPosition()->getY()));
         $ballPosition = new Point(0, 0);
         $ballPosition->fromRaw($this->httpClient->send('GET', 'http://ball-php/ball/position', null));
         $this->moveTowards($ballPosition);
     }
 
-    private function sign($number)
-    {
-        return ($number > 0) ? 1 : (($number < 0) ? -1 : 0);
+    private function hitBall(PointInterface $ballPosition){
+        $this->httpClient->send('PUT', sprintf('http://ball-php/ball/hit/%s/%s/%s/%s/%s',
+            $this->getPosition()->getX(),
+            $this->getPosition()->getY(),
+            10,
+            $this->getUUID(),
+            $this->getName()
+        ),null);
     }
 
-
-    private function hitBall(PointInterface $ballPosition){
-            
+    private function getDistancedToHit(){
+        return 2;
     }
 
     private function moveTowards(PointInterface $ballPosition)
     {
-
         $oldPosition = clone ($this->getPosition());
         $distanceDone = $this->position->moveTowards($ballPosition, $this->speed);
         //$this->position->shiftXY(random_int(-100*$this->random,100*$this->random)/100,random_int(-100*$this->random,100*$this->random)/100);
         $this->save();
-        if($this->position->distanceTo($ballPosition)<2){
+
+        if($this->position->distanceTo($ballPosition)<$this->getDistancedToHit()){
             $this->hitBall($ballPosition);
         }
 
