@@ -85,6 +85,7 @@ class StadiumController extends Controller
 
             $player->setUUID($jsonData->uuid);
             $player->setName($jsonData->name);
+            $player->setTeam($jsonData->team);
             $player->setPosition($jsonData->position->x, $jsonData->position->y);
             $stadium->setPlayer($player);
 

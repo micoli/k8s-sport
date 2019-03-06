@@ -162,7 +162,7 @@ class Player implements MovableInterface, PlayerInterface
     {
         //$oldPosition = clone ($this->getPosition());
         $distanceDone = $this->position->moveTowards($ballPosition, $this->speed);
-        //$this->position->shiftXY(random_int(-100*$this->random,100*$this->random)/100,random_int(-100*$this->random,100*$this->random)/100);
+        $this->position->shiftXY(random_int(-100*$this->random,100*$this->random)/100,random_int(-100*$this->random,100*$this->random)/100);
         $this->save();
 
         if ($this->position->distanceTo($ballPosition) < $this->getDistancedToHit()) {

@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class PlayerController extends Controller
 {
-    /** @var @Player $player */
+    /** @var Player $player */
     var $player;
 
     function __construct(Player $player)
@@ -25,5 +25,21 @@ class PlayerController extends Controller
     public function position()
     {
         return new JsonResponse(['x' => $this->player->getPosition()->getY(),'y' => $this->player->getPosition()->getY()]);
+    }
+
+    /**
+     * @Route("/player")
+     */
+    public function player()
+    {
+        return new JsonResponse(['player' => $this->player->toStruct()]);
+    }
+
+    /**
+     * @Route("/player/env")
+     */
+    public function playerEnv()
+    {
+        return new JsonResponse(['env' => getenv()]);
     }
 }
