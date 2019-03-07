@@ -9,6 +9,7 @@ spec:
   selector:
     app: rabbitmq-node
   ports:
-  - protocol: TCP
-    port: 8081
-    targetPort: 15672
+    # the port that this service should serve on
+    - port: 5672
+      name: rabbitmq
+      targetPort: 5672
