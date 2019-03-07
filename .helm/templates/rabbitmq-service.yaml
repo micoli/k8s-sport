@@ -1,0 +1,14 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-node
+  labels:
+    app: rabbitmq-node
+spec:
+  selector:
+    app: rabbitmq-node
+  ports:
+  - protocol: TCP
+    port: 8081
+    targetPort: 15672

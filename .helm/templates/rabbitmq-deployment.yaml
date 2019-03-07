@@ -1,0 +1,26 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-rabbitmq-node
+  labels:
+    app: rabbitmq-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq-node
+  template:
+    metadata:
+      labels:
+        app: rabbitmq-node
+    spec:
+      containers:
+      - name: rabbitmq-node
+        image: rabbitmq:3.6-management
+        imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
+        env:
+        - name: RABBITMQ_DEFAULT_USER
+          value: admin
+        - name: RABBITMQ_DEFAULT_PASS
+          value: admin
