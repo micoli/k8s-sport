@@ -119,18 +119,14 @@ class Player implements MovableInterface, PlayerInterface
     public function run()
     {
         $ballPosition = new Point(0, 0);
-        print __LINE__." ";
         $ballPosition->fromRaw($this->httpClient->send('GET', 'http://ball-php/ball/position', null));
-        print __LINE__." ";
         $this->moveTowards($ballPosition);
-        print __LINE__." ";
         $this->log->info(sprintf('player run %sx%s, ball :%sx%s',
             $this->getPosition()->getX(),
             $this->getPosition()->getY(),
             $ballPosition->getX(),
             $ballPosition->getY()
         ));
-        print __LINE__." ";
     }
 
     private function hitBall(PointInterface $ballPosition)
@@ -164,21 +160,15 @@ class Player implements MovableInterface, PlayerInterface
 
     private function moveTowards(PointInterface $ballPosition)
     {
-        //$oldPosition = clone ($this->getPosition());
         $distanceDone = $this->position->moveTowards($ballPosition, $this->speed);
+
         $this->position->shiftXY(random_int(-100*$this->random,100*$this->random)/100,random_int(-100*$this->random,100*$this->random)/100);
+
         $this->save();
 
         if ($this->position->distanceTo($ballPosition) < $this->getDistancedToHit()) {
             $this->hitBall($ballPosition);
         }
-
-        /*$this->log->info(sprintf("move towards (%0.2f,%0.2f) => (%0.2fx%0.2f) => (%0.2fx%0.2f)  @ %0.2f -\n",
-            $oldPosition->getX(), $oldPosition->getY(),
-            $this->position->getX(), $this->position->getY(),
-            $ballPosition->getX(), $ballPosition->getY(),
-            $this->speed
-        ));*/
     }
 
 }

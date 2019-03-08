@@ -52,9 +52,7 @@ class RunCommand extends ContainerAwareCommand
                     $this->ball->run();
                     break;
                 case 'player':
-            print $type;
                     $this->player->load();
-                    print "ee";
                     $this->player->run();
                     break;
                 case 'ws-server':
