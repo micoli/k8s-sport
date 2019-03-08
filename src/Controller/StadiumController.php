@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entities\Ball;
 use App\Entities\Player;
 use App\Entities\Stadium;
+use App\Infrastructure\WsClient;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -14,10 +15,13 @@ class StadiumController extends Controller
 {
     /** @var @Stadium $stadium */
     var $stadium;
+    private $WsClient = null;
 
-    function __construct()
+    function __construct(WsClient $WsClient)
     {
+        $this->WsClient = $WsClient;
     }
+
 
     /**
      * @Route("/")
@@ -58,6 +62,9 @@ class StadiumController extends Controller
             $ball->setPosition($jsonData->position->x, $jsonData->position->y);
             $stadium->setBall($ball);
 
+            $this->WsClient->send('broadcast:' . json_encode($jsonData));
+            $this->WsClient->close();
+
             return new JsonResponse(['success' => true]);
         }
         return new JsonResponse(['success' => false], 500);
@@ -88,6 +95,8 @@ class StadiumController extends Controller
             $player->setTeam($jsonData->team);
             $player->setPosition($jsonData->position->x, $jsonData->position->y);
             $stadium->setPlayer($player);
+            $this->WsClient->send('broadcast:' . json_encode($jsonData));
+            $this->WsClient->close();
 
             return new JsonResponse(['success' => true]);
         }

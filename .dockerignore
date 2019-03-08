@@ -3,3 +3,5 @@ var
 .helm
 .gitlabci
 builds
+.docker/nodejs/node_modules
+.docker/nodejs/npm-debug.log

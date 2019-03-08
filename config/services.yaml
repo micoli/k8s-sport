@@ -33,10 +33,17 @@ services:
     App\Entities\Dimension:
         public: true
         arguments:
-           - 80
-           - 100
+         - 80
+         - 100
+
+    App\Infrastructure\WsClient:
+        public: true
+        arguments:
+        - "ws-server-php"
+        - "80"
+        - ""
 
     App\Infrastructure\Data:
         public: true
         arguments:
-            - "/tmp/data.txt"
+        - "/tmp/data.txt"

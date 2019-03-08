@@ -2,13 +2,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: stadium-php
+  name: ws-server-php
   labels:
-    app: stadium-php
+    app: ws-server-php
 spec:
   selector:
-    app: stadium-php
+    app: ws-server-php
   ports:
   - protocol: TCP
     port: 80
-    targetPort: 80
+    targetPort: 82

@@ -119,14 +119,18 @@ class Player implements MovableInterface, PlayerInterface
     public function run()
     {
         $ballPosition = new Point(0, 0);
+        print __LINE__." ";
         $ballPosition->fromRaw($this->httpClient->send('GET', 'http://ball-php/ball/position', null));
+        print __LINE__." ";
         $this->moveTowards($ballPosition);
+        print __LINE__." ";
         $this->log->info(sprintf('player run %sx%s, ball :%sx%s',
             $this->getPosition()->getX(),
             $this->getPosition()->getY(),
             $ballPosition->getX(),
             $ballPosition->getY()
         ));
+        print __LINE__." ";
     }
 
     private function hitBall(PointInterface $ballPosition)

@@ -1,37 +1,118 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Stadium</title>
-        <meta http-equiv="refresh" content="0.5;URL=.">
-    </head>
-    <body>
-        <h1>Stadium</h1>
-        {#
-        <h2>Players</h2>
-        <ul id="players">
-            {% for player in players %}
-                {{ player.getUUID() }} :: {{ player.getPosition().getX() }} / {{ player.getPosition().getY() }}
-            {% endfor %}
-        </ul>
-        <h2>Balls</h2>
-        <ul id="balls">
-            {% for ball in balls %}
-                {{ ball.getUUID() }} :: {{ ball.getPosition().getX() }} / {{ ball.getPosition().getY() }}
-            {% endfor %}
-        </ul>
-        #}
-        <div style="width:{{ dimension.getWidth()*4 }}px;height:{{ dimension.getHeight()*4 }}px;background-color: seagreen;border:1px solid black;position:relative">
-            {% for player in players %}
-                <div style="font-size:12px;width:10px;height:10px;background-color:{{ player.team }};position:absolute;left:{{ player.getPosition().getX()*4 }}px;top:{{  player.getPosition().getY()*4 }}px ">
-                    <br>{{ player.getPosition().getX() |number_format(2, '.') }}x{{  player.getPosition().getY()|number_format(2, '.') }}
-                </div>
-            {% endfor %}
+<head>
+    <title>Stadium</title>
+    {#<meta http-equiv="refresh" content="5;URL=.">#}
 
-            {% for ball in balls %}
-                <div style="font-size:12px;width:10px;height:10px;background-color:orange;position:absolute;left:{{ ball.getPosition().getX()*4 }}px;top:{{  ball.getPosition().getY()*4 }}px">
-                    <br>{{ ball.getPosition().getX()|number_format(2, '.') }}x{{  ball.getPosition().getY()|number_format(2, '.') }}
-                </div>
-            {% endfor %}
-        </div>
-    </body>
+    <link rel="stylesheet" href="knacs.css" media="all">
+    <script language="javascript" type="text/javascript">
+      var wsUri = document.location.href.replace('http:', 'ws:').replace('stadium-php:', 'ws-server-php:');
+      console.log(wsUri);
+      var output;
+      var stack = [];
+
+      function init() {
+        output = document.getElementById("ws-output");
+        testWebSocket();
+      }
+
+      function testWebSocket() {
+        websocket = new WebSocket(wsUri);
+        websocket.onopen = function (evt) {
+          onOpen(evt)
+        };
+        websocket.onclose = function (evt) {
+          onClose(evt)
+        };
+        websocket.onmessage = function (evt) {
+          onMessage(evt)
+        };
+        websocket.onerror = function (evt) {
+          onError(evt)
+        };
+      }
+
+      function onOpen(evt) {
+        writeToScreen("CONNECTED");
+      }
+
+      function onClose(evt) {
+        writeToScreen("DISCONNECTED");
+      }
+
+      function onMessage(evt) {
+        //writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
+        var d = JSON.parse(evt.data);
+        var el = document.getElementById(d.uuid);
+        el.style.top = (d.position.y * 4) + 'px';
+        el.style.left = (d.position.x * 4) +'px';
+      }
+
+      function onError(evt) {
+        writeToScreen('<span style="color: red;">ERROR:</span> ' + evt.data);
+      }
+
+      function doSend(message) {
+        writeToScreen("SENT: " + message);
+        websocket.send(message);
+      }
+
+      function writeToScreen(message) {
+        stack.unshift(message);
+        stack = stack.slice(0, 5);
+        output.innerHTML = '<li>' + stack.join('</li><li>') + '</li>';
+      }
+
+      window.addEventListener("load", init, false);
+
+    </script>
+
+</head>
+<body>
+<h1>Stadium</h1>
+<table>
+    <tr>
+        <td>
+            <div style="width:{{ dimension.getWidth()*4 }}px;height:{{ dimension.getHeight()*4 }}px;background-color: seagreen;border:1px solid black;position:relative">
+                {% for player in players %}
+                    <div id="{{ player.getUUID() }}"
+                         style="font-size:12px;width:10px;height:10px;background-color:{{ player.team }};position:absolute;left:{{ player.getPosition().getX()*4 }}px;top:{{ player.getPosition().getY()*4 }}px ">
+                        <br>{{ player.getPosition().getX() |number_format(2, '.') }}
+                        x{{ player.getPosition().getY()|number_format(2, '.') }}
+                    </div>
+                {% endfor %}
+
+                {% for ball in balls %}
+                    <div id="{{ ball.getUUID() }}"
+                         style="font-size:12px;width:10px;height:10px;background-color:orange;position:absolute;left:{{ ball.getPosition().getX()*4 }}px;top:{{ ball.getPosition().getY()*4 }}px">
+                        <br>{{ ball.getPosition().getX()|number_format(2, '.') }}
+                        x{{ ball.getPosition().getY()|number_format(2, '.') }}
+                    </div>
+                {% endfor %}
+            </div>
+
+        </td>
+        <td>
+            <h2>Players</h2>
+            <ul id="players">
+                {% for player in players %}
+                    <li>
+                        {{ player.getUUID() }} :: {{ player.getPosition().getX() }} / {{ player.getPosition().getY() }}
+                    </li>
+                {% endfor %}
+            </ul>
+            <h2>Balls</h2>
+            <ul id="balls">
+                {% for ball in balls %}
+                    <li>
+                        {{ ball.getUUID() }} :: {{ ball.getPosition().getX() }} / {{ ball.getPosition().getY() }}
+                    </li>
+                {% endfor %}
+            </ul>
+        </td>
+    </tr>
+</table>
+
+<div id="ws-output"></div>
+</body>
 </html>

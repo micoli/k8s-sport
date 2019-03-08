@@ -9,5 +9,5 @@ curl -LO https://storage.googleapis.com/container-structure-test/latest/containe
 
 
 http://localhost:8001/api/v1/namespaces/default/services/http:stadium-php:8080/proxy/
-http://localhost:8001/api/v1/namespaces/default/services/http:rabbitmq-node:8081/proxy/
+ws://localhost:8001/api/v1/namespaces/default/services/ws-server-php:8080/proxy/
 

@@ -1,0 +1,30 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "fullname" . }}-ws-server-php
+  labels:
+    app: ws-server-php
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ws-server-php
+  template:
+    metadata:
+      labels:
+        app: ws-server-php
+    spec:
+      containers:
+      - name: runner-php
+        containerPort: 80
+        image: {{ .Values.imageName }}
+        imagePullPolicy: {{ .Values.imagePullPolicy | quote }}
+        env:
+        - name: APP_ENV
+          valueFrom:
+            configMapKeyRef:
+              name: {{ template "fullname" . }}-global-env
+              key: APP_ENV
+        - name: APP_TYPE
+          value: ws-server

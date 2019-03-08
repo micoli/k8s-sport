@@ -22,6 +22,7 @@ class Data
 
     public function save($data)
     {
+
         return file_put_contents($this->dataPath, json_encode($data));
     }
 }

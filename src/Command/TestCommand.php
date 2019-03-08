@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entities\Player;
 use App\Entities\Point;
+use App\Infrastructure\WsClient;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -28,6 +29,19 @@ class TestCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
+        $ws = new WsClient(array
+        (
+            'host' => '127.0.0.1',
+            'port' => 81,
+            'path' => ''
+        ));
+        $result = $ws->send('broadcast:aaaaaa');
+        $ws->close();
+        echo $result;
+        echo "ee";
+        die();
+
         (new Point(0.0,0.0))->moveTowards((new Point(10.0,10.0)),3);
         (new Point(0.0,0.0))->moveTowards((new Point(10.0,10.0)),13);
         (new Point(0.0,0.0))->moveTowards((new Point(10.0,10.0)),213);

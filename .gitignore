@@ -16,3 +16,5 @@
 ###> phpunit/phpunit ###
 /phpunit.xml
 ###< phpunit/phpunit ###
+.docker/nodejs/node_modules
+.docker/nodejs/npm-debug.log
