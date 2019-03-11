@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Component\Domain;
+namespace App\Core\SharedKernel\Component;
 
 use App\Core\Port\PointInterface;
 

@@ -4,22 +4,17 @@ declare(strict_types=1);
 
 namespace test\Unit\App\Core\Component;
 
-use App\Core\Component\Domain\Dimension;
-use App\Core\Component\Domain\Stadium;
-use App\Core\Port\StadiumInterface;
-use App\Entities\BallFactory;
-use App\Entities\PlayerFactory;
-use App\Infrastructure\Persistence\DataMemory;
+use App\Core\Component\Stadium\Domain\Stadium;
 use PHPUnit\Framework\TestCase;
 
 final class stadiumTest extends TestCase
 {
-    /** @var StadiumInterface */
+    /** @var Stadium */
     private $stadium;
 
     public function setUp(): void
     {
-        $this->stadium = new Stadium(new Dimension(80, 80), new DataMemory(), $this->createMock(BallFactory::class), $this->createMock(PlayerFactory::class));
+        $this->stadium = new Stadium();
     }
 
     public function testDistributeGiveOnePlayer()

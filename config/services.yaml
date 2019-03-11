@@ -27,7 +27,7 @@ services:
         resource: '../src/Presentation/Web/'
         tags: ['controller.service_arguments']
 
-    App\Core\Component\Domain\Dimension:
+    App\Core\SharedKernel\Component\Dimension:
         public: true
         arguments:
          - 80

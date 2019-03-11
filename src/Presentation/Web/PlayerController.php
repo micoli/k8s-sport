@@ -2,20 +2,24 @@
 
 namespace App\Presentation\Web;
 
-use App\Core\Component\Application\Player;
+use App\Core\Component\Player\Application\Repository\PlayerRepositoryInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 class PlayerController extends Controller
 {
-    /** @var Player $player */
-    public $player;
+    /** @var PlayerRepositoryInterface $player */
+    public $playerRepository;
 
-    public function __construct(Player $player)
+    /** @var LoggerInterface */
+    public $logger;
+
+    public function __construct(PlayerRepositoryInterface $playerRepository, LoggerInterface $logger)
     {
-        $this->player = $player;
-        $this->player->load();
+        $this->playerRepository = $playerRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -23,7 +27,9 @@ class PlayerController extends Controller
      */
     public function position()
     {
-        return new JsonResponse(['x' => $this->player->getPosition()->getY(), 'y' => $this->player->getPosition()->getY()]);
+        $player = $this->playerRepository->get();
+
+        return new JsonResponse(['x' => $player->getPosition()->getY(), 'y' => $player->getPosition()->getY()]);
     }
 
     /**
@@ -31,7 +37,9 @@ class PlayerController extends Controller
      */
     public function player()
     {
-        return new JsonResponse(['player' => $this->player->serialize()]);
+        $player = $this->playerRepository->get();
+
+        return new JsonResponse(['player' => $player->serialize()]);
     }
 
     /**

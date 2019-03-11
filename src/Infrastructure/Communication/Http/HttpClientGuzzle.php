@@ -30,7 +30,8 @@ class HttpClientGuzzle implements HttpClientInterface
 
             return json_decode($response->getBody()->getContents());
         } catch (RequestException $e) {
-            $this->logger->error(sprintf("%s@%s (%s) %s\n", $method, $url, json_encode($payload), $e->getMessage()));
+            //$this->logger->error(sprintf("%s@%s (%s) %s\n", $method, $url, json_encode($payload), $e->getMessage()));
+            $this->logger->error(sprintf("%s@%s (%s) %s\n", $method, $url, json_encode($payload), $e->getResponse()->getBody()->getContents()));
 
             return null;
         }

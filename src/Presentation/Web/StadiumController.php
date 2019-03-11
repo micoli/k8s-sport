@@ -2,30 +2,30 @@
 
 namespace App\Presentation\Web;
 
-use App\Core\Component\Application\Stadium;
-use App\Infrastructure\WebSocket\Client\WsClient;
+use App\Core\Component\Stadium\Application\Repository\StadiumRepositoryInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 class StadiumController extends Controller
 {
-    /** @var @Stadium $stadium */
-    public $stadium;
-    private $WsClient = null;
+    /** @var StadiumRepositoryInterface */
+    private $stadiumRepository;
 
-    public function __construct(WsClient $WsClient)
+    public function __construct(StadiumRepositoryInterface $stadiumRepository, LoggerInterface $logger)
     {
-        $this->WsClient = $WsClient;
+        $this->stadiumRepository = $stadiumRepository;
+        $this->logger = $logger;
     }
 
     /**
      * @Route("/")
      * @Route("/stadium")
      */
-    public function default(Stadium $stadium)
+    public function default()
     {
-        $stadium->load();
+        $stadium = $this->stadiumRepository->get();
 
         return $this->render('stadium.html.twig', [
             'dimension' => $stadium->getDimension(),
@@ -35,9 +35,9 @@ class StadiumController extends Controller
     /**
      * @Route("/stadium/dimension")
      */
-    public function getDimension(Stadium $stadium)
+    public function getDimension()
     {
-        $stadium->load();
+        $stadium = $this->stadiumRepository->get();
 
         return new JsonResponse([
             'dimension' => $stadium->getDimension(),
@@ -47,8 +47,12 @@ class StadiumController extends Controller
     /**
      * @Route("/stadium/distributePlayer/{team}", methods={"DELETE"})
      */
-    public function distributePlayer(Stadium $stadium, $team)
+    public function distributePlayer($team)
     {
-        return new JsonResponse(['name' => $stadium->distributePlayer($team)]);
+        $stadium = $this->stadiumRepository->get();
+        $newName = $stadium->distributePlayer($team);
+        $this->stadiumRepository->update($stadium);
+
+        return new JsonResponse(['name' => $newName]);
     }
 }

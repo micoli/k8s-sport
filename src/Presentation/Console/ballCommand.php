@@ -2,19 +2,24 @@
 
 namespace App\Presentation\Console;
 
-use App\Core\Port\BallInterface;
+use App\Core\Component\Ball\Application\Repository\BallRepositoryInterface;
+use App\Core\Component\Ball\Application\Service\BallService;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class ballCommand extends ContainerAwareCommand
 {
-    /** @var BallInterface */
-    private $ball;
+    /** @var BallService */
+    private $ballservice;
 
-    public function __construct(BallInterface $ball)
+    /** @var BallRepositoryInterface */
+    private $ballRepository;
+
+    public function __construct(BallService $ballservice, BallRepositoryInterface $ballRepository)
     {
-        $this->ball = $ball;
+        $this->ballservice = $ballservice;
+        $this->ballRepository = $ballRepository;
         parent::__construct();
     }
 
@@ -28,8 +33,9 @@ class ballCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         for ($i = 0; $i < 1; ++$i) {
-            $this->ball->load();
-            $this->ball->run();
+            $ball = $this->ballRepository->get();
+            $this->ballservice->run($ball);
+            $this->ballRepository->update($ball);
             sleep(0.5);
         }
     }

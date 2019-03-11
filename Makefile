@@ -29,6 +29,10 @@ vendor: composer.json composer.lock
 	composer validate
 	composer install
 
+cs-fixer:
+	vendor/bin/php-cs-fixer fix src
+	vendor/bin/php-cs-fixer fix tests
+
 skaffold-dev:
 	skaffold dev -p dev
 

@@ -2,8 +2,8 @@
 
 namespace App\Presentation\Web;
 
-use App\Core\Component\Application\Ball;
-use App\Core\Component\Domain\Point;
+use App\Core\Component\Ball\Application\Repository\BallRepositoryInterface;
+use App\Core\SharedKernel\Component\Point;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -11,15 +11,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BallController extends Controller
 {
-    /** @var @Ball $ball */
-    public $ball;
+    /** @var BallRepositoryInterface $ball */
+    public $ballRepository;
 
     /** @var LoggerInterface */
     public $logger;
 
-    public function __construct(Ball $ball, LoggerInterface $logger)
+    public function __construct(BallRepositoryInterface $ballRepository, LoggerInterface $logger)
     {
-        $this->ball = $ball;
+        $this->ballRepository = $ballRepository;
         $this->logger = $logger;
     }
 
@@ -28,11 +28,11 @@ class BallController extends Controller
      */
     public function position()
     {
-        $this->ball->load();
+        $ball = $this->ballRepository->get();
 
         return new JsonResponse([
-            'x' => $this->ball->getPosition()->getX(),
-            'y' => $this->ball->getPosition()->getY(),
+            'x' => $ball->getPosition()->getX(),
+            'y' => $ball->getPosition()->getY(),
         ]);
     }
 
@@ -42,12 +42,15 @@ class BallController extends Controller
     public function hitTo($x, $y, $strength, $uuid, $name)
     {
         $this->logger->info(sprintf('hit to %s/%s@%s %s::%s', $x, $y, $strength, $uuid, $name));
-        $this->ball->load();
-        $this->ball->hitTo(new Point($x, $y), $strength);
+        $ball = $this->ballRepository->get();
+
+        $ball->hitTo(new Point($x, $y), $strength);
+
+        $this->ballRepository->update($ball);
 
         return new JsonResponse([
-            'x' => $this->ball->getPosition()->getX(),
-            'y' => $this->ball->getPosition()->getY(),
+            'x' => $ball->getPosition()->getX(),
+            'y' => $ball->getPosition()->getY(),
         ]);
     }
 
@@ -56,13 +59,16 @@ class BallController extends Controller
      */
     public function hitFrom($x, $y, $strength, $uuid, $name)
     {
+        $ball = $this->ballRepository->get();
+
         $this->logger->info(sprintf('hit from %s/%s@%s %s::%s', $x, $y, $strength, $uuid, $name));
-        $this->ball->load();
-        $this->ball->hitFrom(new Point($x, $y), $strength);
+        $ball->hitFrom(new Point($x, $y), $strength);
+
+        $this->ballRepository->update($ball);
 
         return new JsonResponse([
-            'x' => $this->ball->getPosition()->getX(),
-            'y' => $this->ball->getPosition()->getY(),
+            'x' => $ball->getPosition()->getX(),
+            'y' => $ball->getPosition()->getY(),
         ]);
     }
 }

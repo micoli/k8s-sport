@@ -1,33 +1,17 @@
 <?php
 
-namespace App\Core\Component\Application;
+namespace App\Core\Component\Stadium\Domain;
 
-use App\Core\Component\Domain\Dimension;
 use App\Core\Port\DimensionInterface;
-use App\Core\Port\PersistableInterface;
-use App\Core\Port\StadiumInterface;
-use App\Infrastructure\Persistence\DataInterface;
+use App\Core\SharedKernel\Component\Dimension;
+use App\Core\SharedKernel\Component\Point;
 
-final class Stadium implements StadiumInterface, PersistableInterface
+final class Stadium implements \Serializable
 {
     /** @var DimensionInterface */
     private $dimension;
 
-    /** @var DataInterface */
-    private $data;
-
     private $distributedPlayers = [];
-
-    public function __construct(DimensionInterface $dimension, DataInterface $data)
-    {
-        $this->data = $data;
-        $this->dimension = $dimension;
-    }
-
-    public function load()
-    {
-        $this->unserialize($this->data->load());
-    }
 
     public function unserialize($dto)
     {
@@ -40,15 +24,15 @@ final class Stadium implements StadiumInterface, PersistableInterface
         return $this;
     }
 
-    public function save()
+    public function serialize()
     {
-        $this->data->save(json_encode([
+        return json_encode([
             'dimension' => [
                 'width' => $this->dimension->getWidth(),
                 'height' => $this->dimension->getHeight(),
             ],
             'distributedPlayers' => $this->distributedPlayers,
-        ]));
+        ]);
     }
 
     public function getDimension(): DimensionInterface
@@ -76,8 +60,6 @@ final class Stadium implements StadiumInterface, PersistableInterface
         $playerName = array_rand($team);
 
         $this->distributedPlayers[] = $playerName;
-
-        $this->save();
 
         return $playerName;
     }
