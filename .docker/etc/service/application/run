@@ -5,4 +5,4 @@ source /env
 
 cd /application
 
-exec bin/console application:run
+exec bin/console application:run:$APP_TYPE

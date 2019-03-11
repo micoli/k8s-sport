@@ -29,3 +29,12 @@ spec:
               key: APP_ENV
         - name: APP_TYPE
           value: stadium
+        ports:
+        - name: nginx
+          containerPort: 80
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: nginx
+          initialDelaySeconds: 3
+          periodSeconds: 3

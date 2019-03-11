@@ -5,10 +5,15 @@
     "php": "^7.0.8",
     "ext-ctype": "*",
     "ext-iconv": "*",
+    "cboden/ratchet": "dev-master",
+    "cujojs/when": "2.7.*",
     "friendsofphp/php-cs-fixer": "^2.14",
+    "gimite/web-socket-js": "dev-master",
     "guzzlehttp/guzzle": "^6.3",
     "infection/infection": "^0.12.2",
+    "monolog/monolog": "~1.0",
     "phpunit/phpunit": "^8.0",
+    "psr/log": "~1.0",
     "ramsey/uuid": "^3.8",
     "symfony/console": "3.4.*",
     "symfony/dotenv": "3.4.*",
@@ -16,14 +21,10 @@
     "symfony/framework-bundle": "3.4.*",
     "symfony/lock": "3.4.*",
     "symfony/monolog-bundle": "^3.3",
+    "symfony/test-pack": "^1.0",
     "symfony/twig-bundle": "3.4.*",
     "symfony/yaml": "3.4.*",
-    "cboden/ratchet": "dev-master",
-    "psr/log": "~1.0",
-    "monolog/monolog": "~1.0",
-    "cujojs/when": "2.7.*",
-    "tavendo/autobahnjs": "0.8.*",
-    "gimite/web-socket-js": "dev-master"
+    "tavendo/autobahnjs": "0.8.*"
   },
   "repositories": [
     {

@@ -18,6 +18,12 @@ test: vendor
 	vendor/bin/phpunit --configuration=tests/Unit/phpunit.xml
 	vendor/bin/phpunit --configuration=tests/Integration/phpunit.xml
 
+test-unit: vendor
+	vendor/bin/phpunit --configuration=tests/Unit/phpunit.xml
+
+test-integration: vendor
+	vendor/bin/phpunit --configuration=tests/Integration/phpunit.xml
+
 vendor: composer.json composer.lock
 	composer self-update
 	composer validate

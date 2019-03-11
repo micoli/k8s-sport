@@ -1,5 +1,5 @@
 
-index:
-    path: /status
-    defaults:
-      _controller: 'App\Controller\StatusController::index'
+#index:
+#    path: /status
+#    defaults:
+#      _controller: 'App\Controller\StatusController::index'

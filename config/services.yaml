@@ -23,27 +23,27 @@ services:
 
     # controllers are imported separately to make sure services can be injected
     # as action arguments even if you don't extend any base controller class
-    App\Controller\:
-        resource: '../src/Controller'
+    App\Presentation\Web\:
+        resource: '../src/Presentation/Web/'
         tags: ['controller.service_arguments']
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
-
-    App\Entities\Dimension:
+    App\Core\Component\Dimension:
         public: true
         arguments:
          - 80
          - 100
 
-    App\Infrastructure\WsClient:
+    App\Infrastructure\WebSocket\Client\WsClient:
         public: true
         arguments:
         - "ws-server-php"
         - "80"
         - ""
 
-    App\Infrastructure\Data:
+    App\Infrastructure\Persistence\Data:
         public: true
         arguments:
         - "/tmp/data.txt"
+
+    App\Infrastructure\Communication\Http\HttpClientInterface: '@App\Infrastructure\Communication\Http\HttpClientGuzzle'
+    App\Infrastructure\Persistence\DataInterface: '@App\Infrastructure\Persistence\Data'

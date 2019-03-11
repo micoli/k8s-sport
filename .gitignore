@@ -18,3 +18,8 @@
 ###< phpunit/phpunit ###
 .docker/nodejs/node_modules
 .docker/nodejs/npm-debug.log
+###> symfony/phpunit-bridge ###
+.phpunit
+/phpunit.xml
+###< symfony/phpunit-bridge ###
+/.phpunit.result.cache

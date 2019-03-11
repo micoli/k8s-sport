@@ -13,8 +13,6 @@ profiles:
 
 build:
   tagPolicy:
-    #sha256: {}
-    #gitCommit: {}
     envTemplate:
       template: "{{.IMAGE_NAME}}:{{._CI_COMMIT_SHA}}"
 
@@ -40,16 +38,13 @@ build:
       '.php_cs.dist': /application/.php_cs.dist
       '.env': /application/.env
 
-#test:
-#  - image: registry.gitlab.com/micoli/k8s-sport
-#    structureTests:
-#    - ./tests/skaffold/*
-
+      '.docker': /dev/null
+      '.helm': /dev/null
 
 deploy:
   helm:
     releases:
-    - name: v1
+    - name: fussball
       chartPath: .helm
       valuesFiles:
       - .helm/values.yaml
