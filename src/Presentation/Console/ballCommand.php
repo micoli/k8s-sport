@@ -32,7 +32,7 @@ class ballCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        for ($i = 0; $i < 1; ++$i) {
+        for ($i = 0; $i < 8; ++$i) {
             $ball = $this->ballRepository->get();
             $this->ballservice->run($ball);
             $this->ballRepository->update($ball);

@@ -17,6 +17,8 @@ class Player implements \Serializable
 
     private $name;
 
+    private $icon;
+
     /** @var PointInterface */
     private $position;
 
@@ -28,6 +30,21 @@ class Player implements \Serializable
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function getIcon(): string
+    {
+        return $this->icon;
+    }
+
+    public function setName($name)
+    {
+        $this->name=$name;
+    }
+
+    public function setIcon($icon)
+    {
+        $this->icon=$icon;
     }
 
     public function getTeam(): string
@@ -59,6 +76,7 @@ class Player implements \Serializable
         $dto = json_decode($dto);
         $this->uuid = isset($dto->uuid) ? $dto->uuid : Uuid::uuid4();
         $this->name = isset($dto->name) ? $dto->name : 'name';
+        $this->icon = isset($dto->icon) ? $dto->icon : 'icon';
         $this->team = isset($dto->team) ? $dto->team : getenv('APP_TEAM');
         $this->position = isset($dto->position) ? new Point($dto->position->x, $dto->position->y) : new Point(0, 0);
 
@@ -71,6 +89,7 @@ class Player implements \Serializable
             'type' => 'player',
             'uuid' => $this->uuid,
             'name' => $this->name,
+            'icon' => $this->icon,
             'team' => $this->team,
             'position' => [
                 'x' => $this->getPosition()->getX(),

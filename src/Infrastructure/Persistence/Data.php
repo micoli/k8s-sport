@@ -17,7 +17,7 @@ class Data implements DataInterface
             return file_get_contents($this->dataPath);
         }
 
-        return '';
+        return '{}';
     }
 
     public function save($data)

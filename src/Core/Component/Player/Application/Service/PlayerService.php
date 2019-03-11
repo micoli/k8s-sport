@@ -21,6 +21,14 @@ class PlayerService
         $this->httpClient = $httpClient;
     }
 
+    public function init(Player $player){
+        if ($player->getIcon()=='icon'){
+            $struct = $this->httpClient->send('GET', 'http://stadium-php/stadium/distributePlayer/'.getenv('APP_TEAM'), null);
+            $player->setName($struct->name);
+            $player->setIcon($struct->icon);
+        }
+    }
+
     public function run(Player $player)
     {
         //$this->WsClient->send('broadcast:'.$ball->serialize());

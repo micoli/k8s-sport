@@ -30,9 +30,14 @@ class playerCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        for ($i = 0; $i < 1; ++$i) {
+        for ($i = 0; $i < 8; ++$i) {
+            /** @var $player */
             $player = $this->playerRepository->get();
+
+            $this->playerservice->init($player);
+
             $this->playerservice->run($player);
+
             $this->playerRepository->update($player);
 
             sleep(0.5);

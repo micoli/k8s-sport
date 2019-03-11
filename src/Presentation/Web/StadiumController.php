@@ -28,31 +28,31 @@ class StadiumController extends Controller
         $stadium = $this->stadiumRepository->get();
 
         return $this->render('stadium.html.twig', [
-            'dimension' => $stadium->getDimension(),
+            'surface' => $stadium->getSurface(),
         ]);
     }
 
     /**
-     * @Route("/stadium/dimension")
+     * @Route("/stadium/surface")
      */
-    public function getDimension()
+    public function getSurface()
     {
         $stadium = $this->stadiumRepository->get();
 
         return new JsonResponse([
-            'dimension' => $stadium->getDimension(),
+            'surface' => $stadium->getSurface(),
         ]);
     }
 
     /**
-     * @Route("/stadium/distributePlayer/{team}", methods={"DELETE"})
+     * @Route("/stadium/distributePlayer/{team}", methods={"GET"})
      */
     public function distributePlayer($team)
     {
         $stadium = $this->stadiumRepository->get();
-        $newName = $stadium->distributePlayer($team);
+        list($name,$icon) = $stadium->distributePlayer($team);
         $this->stadiumRepository->update($stadium);
 
-        return new JsonResponse(['name' => $newName]);
+        return new JsonResponse(['name' => $name,'icon' => $icon]);
     }
 }

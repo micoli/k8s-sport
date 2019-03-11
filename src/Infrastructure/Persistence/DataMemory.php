@@ -12,7 +12,7 @@ class DataMemory implements DataInterface
             return self::$data;
         }
 
-        return '';
+        return '{}';
     }
 
     public function save($data)

@@ -19,7 +19,7 @@ test: vendor
 	vendor/bin/phpunit --configuration=tests/Integration/phpunit.xml
 
 test-unit: vendor
-	vendor/bin/phpunit --configuration=tests/Unit/phpunit.xml
+	vendor/bin/phpunit --configuration=tests/Unit/phpunit.xml --coverage-html=var/coverage/ --testdox --coverage-text
 
 test-integration: vendor
 	vendor/bin/phpunit --configuration=tests/Integration/phpunit.xml

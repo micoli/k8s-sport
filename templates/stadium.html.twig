@@ -55,18 +55,21 @@
         node = document.getElementById(d.uuid);
 
         if (!node) {
-          node = document.createElement("div");
+          node = document.createElement("img");
           node.id = d.uuid;
-          node.style.width = '10px';
-          node.style.height = '10px';
+          node.style.width = '20px';
+          node.style.height = '20px';
           node.style.position = 'absolute';
           node.className = 'movable ' + d.type;
           switch (d.type) {
             case 'player':
-              node.style.backgroundColor = d.team;
+              node.src='icons/svg/'+d.icon;
+              //node.style.backgroundColor = d.team;
               break;
             case 'ball':
-              node.style.backgroundColor = 'yellow';
+              node.src='icons/svg/football.svg'
+              node.src='icons/svg/football.svg'
+              //node.style.backgroundColor = 'yellow';
               break;
           }
           document.getElementById("stadium").appendChild(node);
@@ -105,7 +108,7 @@
     {{  balls|json_encode }}
 #}
 <div id="stadium"
-     style="width:{{ dimension.getWidth()*4 }}px;height:{{ dimension.getHeight()*4 }}px;background-color: seagreen;border:1px solid black;position:relative">
+     style="width:{{ surface.getWidth()*4 }}px;height:{{ surface.getHeight()*4 }}px;background-color: seagreen;border:1px solid black;position:relative">
 </div>
 
 <div id="ws-output"></div>

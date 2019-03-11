@@ -7,6 +7,9 @@ Linux
 curl -LO https://storage.googleapis.com/container-structure-test/latest/container-structure-test-linux-amd64 && chmod +x container-structure-test-linux-amd64 && sudo mv container-structure-test-linux-amd64 /usr/local/bin/container-structure-test
 
 
+https://www.flaticon.com/packs/animals-19
+
+https://www.flaticon.com/packs/cute-animal-collection
 
 http://localhost:8001/api/v1/namespaces/default/services/http:stadium-php:8080/proxy/
 ws://localhost:8001/api/v1/namespaces/default/services/ws-server-php:8080/proxy/

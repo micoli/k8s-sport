@@ -2,7 +2,7 @@
 
 namespace App\Core\Port;
 
-interface DimensionInterface
+interface SurfaceInterface
 {
     public function setValues($width, $height);
 
