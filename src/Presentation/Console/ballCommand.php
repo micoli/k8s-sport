@@ -2,7 +2,7 @@
 
 namespace App\Presentation\Console;
 
-use App\Core\Component\Ball;
+use App\Core\Port\BallInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,7 +12,7 @@ class ballCommand extends ContainerAwareCommand
     /** @var BallInterface */
     private $ball;
 
-    public function __construct(Ball $ball)
+    public function __construct(BallInterface $ball)
     {
         $this->ball = $ball;
         parent::__construct();

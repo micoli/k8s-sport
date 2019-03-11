@@ -1,12 +1,14 @@
 <?php
 
-namespace App\Core\Component;
+namespace App\Core\Component\Application;
 
+use App\Core\Component\Domain\Dimension;
 use App\Core\Port\DimensionInterface;
+use App\Core\Port\PersistableInterface;
 use App\Core\Port\StadiumInterface;
 use App\Infrastructure\Persistence\DataInterface;
 
-final class Stadium implements StadiumInterface
+final class Stadium implements StadiumInterface, PersistableInterface
 {
     /** @var DimensionInterface */
     private $dimension;
@@ -38,7 +40,7 @@ final class Stadium implements StadiumInterface
         return $this;
     }
 
-    private function save()
+    public function save()
     {
         $this->data->save(json_encode([
             'dimension' => [
@@ -61,7 +63,28 @@ final class Stadium implements StadiumInterface
 
     public function distributePlayer($teamName)
     {
-        $players = [
+        $players = $this->getPlayers();
+        $team = $players[$teamName];
+        foreach ($this->distributedPlayers as $name) {
+            if (array_key_exists($name, $team)) {
+                unset($team[$name]);
+            }
+        }
+        if (0 == count($team)) {
+            return null;
+        }
+        $playerName = array_rand($team);
+
+        $this->distributedPlayers[] = $playerName;
+
+        $this->save();
+
+        return $playerName;
+    }
+
+    private function getPlayers()
+    {
+        return [
             'blue' => [
                 'Cathy Tang',
                 'Alyssa Villa',
@@ -147,21 +170,5 @@ final class Stadium implements StadiumInterface
                 'Tamia Bassett',
             ],
         ];
-        $team = $players[$teamName];
-        foreach ($this->distributedPlayers as $name) {
-            if (array_key_exists($name, $team)) {
-                unset($team[$name]);
-            }
-        }
-        if (0 == count($team)) {
-            return null;
-        }
-        $playerName = array_rand($team);
-
-        $this->distributedPlayers[] = $playerName;
-
-        $this->save();
-
-        return $playerName;
     }
 }

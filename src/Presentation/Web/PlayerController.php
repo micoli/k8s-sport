@@ -2,7 +2,7 @@
 
 namespace App\Presentation\Web;
 
-use App\Core\Component\Player;
+use App\Core\Component\Application\Player;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;

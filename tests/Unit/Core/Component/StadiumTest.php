@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace test\Unit\App\Core\Component;
 
-use App\Core\Component\Dimension;
-use App\Core\Component\Stadium;
+use App\Core\Component\Domain\Dimension;
+use App\Core\Component\Domain\Stadium;
 use App\Core\Port\StadiumInterface;
 use App\Entities\BallFactory;
 use App\Entities\PlayerFactory;
@@ -29,14 +29,13 @@ final class stadiumTest extends TestCase
 
     public function testDistributeAlwaysNewPlayer()
     {
-        $players=[];
-        for($i=0;$i<50;$i++){
+        $players = [];
+        for ($i = 0; $i < 50; ++$i) {
             $player = $this->stadium->distributePlayer('red');
-            $this->assertNotContains($player,$players);
-            if($player!=null){
-                $players[]=$player;
+            $this->assertNotContains($player, $players);
+            if (null != $player) {
+                $players[] = $player;
             }
         }
     }
 }
-

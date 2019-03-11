@@ -2,8 +2,8 @@
 
 namespace App\Presentation\Web;
 
-use App\Core\Component\Ball;
-use App\Core\Component\Point;
+use App\Core\Component\Application\Ball;
+use App\Core\Component\Domain\Point;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;

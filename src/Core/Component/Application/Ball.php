@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Core\Component;
+namespace App\Core\Component\Application;
 
+use App\Core\Component\Domain\Point;
 use App\Core\Port\BallInterface;
 use App\Core\Port\DimensionInterface;
 use App\Core\Port\MovableInterface;
@@ -51,7 +52,7 @@ final class Ball implements MovableInterface, PersistableInterface, RunableInter
     public function load()
     {
         $this->unserialize($this->data->load());
-        $this->logger->info(sprintf('Ball load %s, %sx%s', $this->getUUID(), $this->position->getX(), $this->position->getY()));
+        //$this->logger->info(sprintf('Ball load %s, %sx%s', $this->getUUID(), $this->position->getX(), $this->position->getY()));
     }
 
     public function unserialize($dto)
@@ -68,7 +69,7 @@ final class Ball implements MovableInterface, PersistableInterface, RunableInter
     public function serialize()
     {
         return json_encode([
-            'ball' => 'ball',
+            'type' => 'ball',
             'uuid' => $this->uuid,
             'speed' => $this->speed,
             'angle' => $this->angle,
@@ -99,7 +100,7 @@ final class Ball implements MovableInterface, PersistableInterface, RunableInter
         return $this->position;
     }
 
-    public function hitFrom(Point $fromPoint, $strength)
+    public function hitFrom(PointInterface $fromPoint, $strength)
     {
         $this->logger->info(sprintf('hit from %s / %s', json_encode($fromPoint), $this->position->distanceTo($fromPoint)));
         if ($this->position->distanceTo($fromPoint) < 2 && $strength > 0) {
@@ -111,7 +112,7 @@ final class Ball implements MovableInterface, PersistableInterface, RunableInter
         }
     }
 
-    public function hitTo(Point $toPoint, $strength)
+    public function hitTo(PointInterface $toPoint, $strength)
     {
         $this->logger->info(sprintf('hit to %s ', json_encode($toPoint)));
         $attackAngle = $toPoint->getAngleBetween($this->getPosition());

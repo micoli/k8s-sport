@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Component;
+namespace App\Core\Component\Domain;
 
 use App\Core\Port\DimensionInterface;
 use App\Core\Port\PointInterface;

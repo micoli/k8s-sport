@@ -2,7 +2,7 @@
 
 namespace App\Presentation\Console;
 
-use App\Core\Component\Player;
+use App\Core\Port\PlayerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -12,7 +12,7 @@ class playerCommand extends ContainerAwareCommand
     /** @var PlayerInterface */
     private $player;
 
-    public function __construct(Player $player)
+    public function __construct(PlayerInterface $player)
     {
         $this->player = $player;
         parent::__construct();

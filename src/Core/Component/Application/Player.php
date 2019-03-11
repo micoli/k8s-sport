@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Core\Component;
+namespace App\Core\Component\Application;
 
+use App\Core\Component\Domain\Point;
 use App\Core\Port\MovableInterface;
 use App\Core\Port\PersistableInterface;
 use App\Core\Port\PlayerInterface;

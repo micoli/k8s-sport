@@ -2,7 +2,7 @@
 
 namespace App\Presentation\Web;
 
-use App\Core\Component\Stadium;
+use App\Core\Component\Application\Stadium;
 use App\Infrastructure\WebSocket\Client\WsClient;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
