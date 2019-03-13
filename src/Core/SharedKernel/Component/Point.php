@@ -2,9 +2,7 @@
 
 namespace App\Core\SharedKernel\Component;
 
-use App\Core\Port\PointInterface;
-
-class Point implements PointInterface
+final class Point implements PointInterface
 {
     private $x = 0;
     private $y = 0;

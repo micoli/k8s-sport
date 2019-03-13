@@ -6,7 +6,10 @@ namespace App\Infrastructure\WebSocket\Client;
     based on: http://stackoverflow.com/questions/7160899/websocket-client-in-php/16608429#16608429
     FIRST EXEC PYTHON SCRIPT TO GET HEADERS
 */
-class WsClient implements WsClientInterface
+
+use App\Core\Port\Notification\NotificationEmitterInterface;
+
+final class WsClient implements NotificationEmitterInterface
 {
     private $head;
     private $instance;
@@ -37,64 +40,27 @@ class WsClient implements WsClientInterface
     public function send($method)
     {
         $this->head .= 'Content-Length: '.strlen($method)."\r\n\r\n";
-        $this->connect();
-        fwrite($this->instance, $this->hybi10Encode($method));
-        $wsdata = fread($this->instance, 2000);
+        if ($this->connect()) {
+            fwrite($this->instance, $this->hybi10Encode($method));
+            $wsdata = fread($this->instance, 2000);
 
-        return $this->hybi10Decode($wsdata);
-    }
-
-    public function close()
-    {
-        if ($this->instance) {
-            fclose($this->instance);
-            $this->instance = null;
+            return $this->hybi10Decode($wsdata);
         }
+
+        return false;
     }
 
     private function connect()
     {
-        $sock = fsockopen($this->host, $this->port, $errno, $errstr, 2);
+        $sock = @fsockopen($this->host, $this->port, $errno, $errstr, 2);
+        if (false === $sock) {
+            return false;
+        }
         fwrite($sock, $this->head);
         $headers = fread($sock, 2000);
         $this->instance = $sock;
-    }
 
-    private function hybi10Decode($data)
-    {
-        $bytes = $data;
-        $dataLength = '';
-        $mask = '';
-        $coded_data = '';
-        $decodedData = '';
-        $secondByte = sprintf('%08b', ord($bytes[1]));
-        $masked = ('1' == $secondByte[0]) ? true : false;
-        $dataLength = (true === $masked) ? ord($bytes[1]) & 127 : ord($bytes[1]);
-        if (true === $masked) {
-            if (126 === $dataLength) {
-                $mask = substr($bytes, 4, 4);
-                $coded_data = substr($bytes, 8);
-            } elseif (127 === $dataLength) {
-                $mask = substr($bytes, 10, 4);
-                $coded_data = substr($bytes, 14);
-            } else {
-                $mask = substr($bytes, 2, 4);
-                $coded_data = substr($bytes, 6);
-            }
-            for ($i = 0; $i < strlen($coded_data); ++$i) {
-                $decodedData .= $coded_data[$i] ^ $mask[$i % 4];
-            }
-        } else {
-            if (126 === $dataLength) {
-                $decodedData = substr($bytes, 4);
-            } elseif (127 === $dataLength) {
-                $decodedData = substr($bytes, 10);
-            } else {
-                $decodedData = substr($bytes, 2);
-            }
-        }
-
-        return $decodedData;
+        return true;
     }
 
     private function hybi10Encode($payload, $type = 'text', $masked = true)
@@ -160,5 +126,56 @@ class WsClient implements WsClientInterface
         }
 
         return $frame;
+    }
+
+    public function close()
+    {
+        if ($this->instance) {
+            fclose($this->instance);
+            $this->instance = null;
+        }
+    }
+
+    private function hybi10Decode($data)
+    {
+        $bytes = $data;
+        $dataLength = '';
+        $mask = '';
+        $coded_data = '';
+        $decodedData = '';
+        $secondByte = sprintf('%08b', ord($bytes[1]));
+        $masked = ('1' == $secondByte[0]) ? true : false;
+        $dataLength = (true === $masked) ? ord($bytes[1]) & 127 : ord($bytes[1]);
+        if (true === $masked) {
+            if (126 === $dataLength) {
+                $mask = substr($bytes, 4, 4);
+                $coded_data = substr($bytes, 8);
+            } elseif (127 === $dataLength) {
+                $mask = substr($bytes, 10, 4);
+                $coded_data = substr($bytes, 14);
+            } else {
+                $mask = substr($bytes, 2, 4);
+                $coded_data = substr($bytes, 6);
+            }
+            for ($i = 0; $i < strlen($coded_data); ++$i) {
+                $decodedData .= $coded_data[$i] ^ $mask[$i % 4];
+            }
+        } else {
+            if (126 === $dataLength) {
+                $decodedData = substr($bytes, 4);
+            } elseif (127 === $dataLength) {
+                $decodedData = substr($bytes, 10);
+            } else {
+                $decodedData = substr($bytes, 2);
+            }
+        }
+
+        return $decodedData;
+    }
+
+    public function broadcast($message)
+    {
+        $this->send($message);
+        $this->close();
     }
 }

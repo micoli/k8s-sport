@@ -2,19 +2,15 @@
 
 namespace App\Presentation\Console;
 
-use App\Infrastructure\Communication\Http\HttpClientInterface;
 use App\Infrastructure\WebSocket\Client\WsClient;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class TestCommand extends ContainerAwareCommand
+final class TestCommand extends ContainerAwareCommand
 {
-    private $httpClient;
-
-    public function __construct(HttpClientInterface $httpClient)
+    public function __construct()
     {
-        $this->httpClient = $httpClient;
         parent::__construct();
     }
 
@@ -27,12 +23,6 @@ class TestCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        //print_r($this->httpClient->send('GET','https://jsonplaceholder.typicode.com/users',null));
-        print_r($this->httpClient->send('POST', 'https://jsonplaceholder.typicode.com/posts', [
-          'title' => 'foo',
-          'body' => 'bar',
-          'userId' => 1,
-        ]));
         die();
         $ws = new WsClient([
             'host' => '127.0.0.1',

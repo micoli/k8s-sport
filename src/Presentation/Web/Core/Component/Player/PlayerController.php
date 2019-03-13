@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Presentation\Web;
+namespace App\Presentation\Web\Core\Component\Player;
 
 use App\Core\Component\Player\Application\Repository\PlayerRepositoryInterface;
+use App\Core\Port\DataFormat\ApiResponseInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class PlayerController extends Controller
+final class PlayerController
 {
     /** @var PlayerRepositoryInterface $player */
     public $playerRepository;
@@ -16,10 +15,14 @@ class PlayerController extends Controller
     /** @var LoggerInterface */
     public $logger;
 
-    public function __construct(PlayerRepositoryInterface $playerRepository, LoggerInterface $logger)
+    /** @var ApiResponseInterface */
+    private $apiResponse;
+
+    public function __construct(PlayerRepositoryInterface $playerRepository, LoggerInterface $logger, ApiResponseInterface $apiResponse)
     {
         $this->playerRepository = $playerRepository;
         $this->logger = $logger;
+        $this->apiResponse = $apiResponse;
     }
 
     /**
@@ -29,7 +32,7 @@ class PlayerController extends Controller
     {
         $player = $this->playerRepository->get();
 
-        return new JsonResponse(['x' => $player->getPosition()->getY(), 'y' => $player->getPosition()->getY()]);
+        return $this->apiResponse->generate(['x' => $player->getPosition()->getY(), 'y' => $player->getPosition()->getY()]);
     }
 
     /**
@@ -39,7 +42,7 @@ class PlayerController extends Controller
     {
         $player = $this->playerRepository->get();
 
-        return new JsonResponse(['player' => $player->serialize()]);
+        return $this->apiResponse->generate(['player' => $player->serialize()]);
     }
 
     /**
@@ -47,6 +50,6 @@ class PlayerController extends Controller
      */
     public function playerEnv()
     {
-        return new JsonResponse(['env' => getenv()]);
+        return $this->apiResponse->generate(['env' => getenv()]);
     }
 }

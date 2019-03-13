@@ -2,7 +2,9 @@
 
 namespace App\Infrastructure\Communication\Http;
 
-class HttpClientCurl implements HttpClientInterface
+use App\Core\Port\ServiceAccess\ServiceAccessInterface;
+
+final class HttpClientCurl implements ServiceAccessInterface
 {
     public function send($method, $url, $payload)
     {

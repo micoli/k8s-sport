@@ -4,3 +4,4 @@ twig:
     strict_variables: '%kernel.debug%'
     paths:
         '%kernel.project_dir%/templates': ~
+        '%kernel.project_dir%/src/Presentation/Web/Core/Component/Stadium': Stadium

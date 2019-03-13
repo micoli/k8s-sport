@@ -14,31 +14,31 @@ use Psr\Log\LoggerAwareTrait;
 /**
  * A Ratchet component that wraps PSR\Log loggers tracking received and sent messages.
  */
-class MessageLogger implements MessageComponentInterface, WsServerInterface
+final class MessageLogger implements MessageComponentInterface, WsServerInterface
 {
     /**
      * @var Monolog\Logger|null
      */
-    protected $_in;
+    private $_in;
 
     /**
      * @var Monolog\Logger|null
      */
-    protected $_out;
+    private $_out;
 
     /**
      * @var Ratchet\Component\MessageComponentInterface|null
      */
-    protected $_component;
+    private $_component;
 
     /**
      * Counts the number of open connections.
      *
      * @var int
      */
-    protected $_i = 0;
+    private $_i = 0;
 
-    protected $_connections;
+    private $_connections;
 
     public function __construct(MessageComponentInterface $component = null, LoggerInterface $incoming = null, LoggerInterface $outgoing = null)
     {
@@ -122,7 +122,7 @@ class MessageLogger implements MessageComponentInterface, WsServerInterface
     }
 }
 
-class MessageLoggedConnection extends AbstractConnectionDecorator implements ConnectionInterface, LoggerAwareInterface
+final class MessageLoggedConnection extends AbstractConnectionDecorator implements ConnectionInterface, LoggerAwareInterface
 {
     use LoggerAwareTrait;
 

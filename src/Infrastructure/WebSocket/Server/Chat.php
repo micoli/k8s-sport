@@ -5,9 +5,9 @@ namespace App\Infrastructure\WebSocket\Server;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
-class Chat implements MessageComponentInterface
+final class Chat implements MessageComponentInterface
 {
-    protected $clients;
+    private $clients;
 
     public function __construct()
     {
@@ -16,21 +16,14 @@ class Chat implements MessageComponentInterface
 
     public function onOpen(ConnectionInterface $conn)
     {
-        echo 'connection';
         $this->clients->attach($conn);
     }
 
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        $matches = [];
-
-        if (preg_match('!^broadcast:(.*)$!', $msg, $matches)) {
-            //$from->close();
-            //print_r($matches);
-            foreach ($this->clients as $client) {
-                if ($from !== $client) {
-                    $client->send($matches[1]);
-                }
+        foreach ($this->clients as $client) {
+            if ($from !== $client) {
+                $client->send($msg);
             }
         }
     }

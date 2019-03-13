@@ -3,15 +3,18 @@
 namespace App\Core\Component\Ball\Application\Service;
 
 use App\Core\Component\Ball\Domain\Ball;
-use App\Infrastructure\WebSocket\Client\WsClientInterface;
+use App\Core\Port\Notification\NotificationEmitterInterface;
 use Psr\Log\LoggerInterface;
 
-class BallService
+final class BallService
 {
-    public function __construct(LoggerInterface $logger, WsClientInterface $WsClient)
+    /** @var NotificationEmitterInterface */
+    private $notificationEmitter;
+
+    public function __construct(LoggerInterface $logger, NotificationEmitterInterface $notificationEmitter)
     {
         $this->logger = $logger;
-        $this->WsClient = $WsClient;
+        $this->notificationEmitter = $notificationEmitter;
     }
 
     public function run(Ball $ball)
@@ -21,6 +24,6 @@ class BallService
             $ball->setAngle($ball->getPosition()->move($ball->getAngle(), $ball->getSpeed(), 80, 100));
             $ball->setSpeed(max($ball->getSpeed() - 0.5, 0));
         }
-        $this->WsClient->send('broadcast:'.$ball->serialize());
+        $this->notificationEmitter->broadcast($ball->serialize());
     }
 }

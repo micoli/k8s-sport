@@ -1,21 +1,29 @@
 <?php
 
-namespace App\Presentation\Web;
+namespace App\Presentation\Web\Core\Component\Stadium;
 
 use App\Core\Component\Stadium\Application\Repository\StadiumRepositoryInterface;
+use App\Core\Port\DataFormat\ApiResponseInterface;
+use App\Core\Port\TemplateEngine\TemplateEngineInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class StadiumController extends Controller
+final class StadiumController
 {
     /** @var StadiumRepositoryInterface */
     private $stadiumRepository;
 
-    public function __construct(StadiumRepositoryInterface $stadiumRepository, LoggerInterface $logger)
+    /** @var TemplateEngineInterface */
+    private $templateEngine;
+
+    /** @var ApiResponseInterface */
+    private $apiResponse;
+
+    public function __construct(StadiumRepositoryInterface $stadiumRepository, LoggerInterface $logger, TemplateEngineInterface $templateEngine, ApiResponseInterface $apiResponse)
     {
         $this->stadiumRepository = $stadiumRepository;
+        $this->apiResponse = $apiResponse;
+        $this->templateEngine = $templateEngine;
         $this->logger = $logger;
     }
 
@@ -27,7 +35,7 @@ class StadiumController extends Controller
     {
         $stadium = $this->stadiumRepository->get();
 
-        return $this->render('stadium.html.twig', [
+        return $this->templateEngine->renderResponse('@Stadium/stadium.html.twig', [
             'surface' => $stadium->getSurface(),
         ]);
     }
@@ -39,7 +47,7 @@ class StadiumController extends Controller
     {
         $stadium = $this->stadiumRepository->get();
 
-        return new JsonResponse([
+        return $this->apiResponse->generate([
             'surface' => $stadium->getSurface(),
         ]);
     }
@@ -50,9 +58,11 @@ class StadiumController extends Controller
     public function distributePlayer($team)
     {
         $stadium = $this->stadiumRepository->get();
-        list($name,$icon) = $stadium->distributePlayer($team);
+
+        list($name, $icon) = $stadium->distributePlayer($team);
+
         $this->stadiumRepository->update($stadium);
 
-        return new JsonResponse(['name' => $name,'icon' => $icon]);
+        return $this->apiResponse->generate(['name' => $name, 'icon' => $icon]);
     }
 }

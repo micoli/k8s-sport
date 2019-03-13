@@ -2,9 +2,9 @@
 
 namespace App\Core\Component\Stadium\Domain;
 
-use App\Core\Port\SurfaceInterface;
-use App\Core\SharedKernel\Component\Surface;
 use App\Core\SharedKernel\Component\Point;
+use App\Core\SharedKernel\Component\Surface;
+use App\Core\SharedKernel\Component\SurfaceInterface;
 
 final class Stadium implements \Serializable
 {
@@ -16,8 +16,8 @@ final class Stadium implements \Serializable
     public function unserialize($dtoStr)
     {
         $dto = @json_decode($dtoStr);
-        if ($dto === NULL) {
-            throw new \ErrorException('Unserialize error in ' . $dtoStr);
+        if (null === $dto) {
+            throw new \ErrorException('Unserialize error in '.$dtoStr);
         }
 
         $this->surface = isset($dto->surface) ? new Surface($dto->surface->width, $dto->surface->height) : new Surface(80, 100);
@@ -129,9 +129,3 @@ final class Stadium implements \Serializable
         ];
     }
 }
-
-
-
-
-
-

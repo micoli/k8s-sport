@@ -2,7 +2,9 @@
 
 namespace App\Infrastructure\Communication\Http;
 
-class HttpClientHttpie implements HttpClientInterface
+use App\Core\Port\ServiceAccess\ServiceAccessInterface;
+
+final class HttpClientHttpie implements ServiceAccessInterface
 {
     public function send($method, $url, $payload)
     {

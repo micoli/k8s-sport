@@ -2,7 +2,9 @@
 
 namespace App\Infrastructure\Persistence;
 
-class Data implements DataInterface
+use App\Core\Port\Persistence\PersistenceServiceInterface;
+
+final class Data implements PersistenceServiceInterface
 {
     private $dataPath = null;
 
@@ -11,7 +13,7 @@ class Data implements DataInterface
         $this->dataPath = $dataPath;
     }
 
-    public function load()
+    public function get(): string
     {
         if (file_exists($this->dataPath)) {
             return file_get_contents($this->dataPath);
@@ -20,7 +22,7 @@ class Data implements DataInterface
         return '{}';
     }
 
-    public function save($data)
+    public function update(string $data)
     {
         return file_put_contents($this->dataPath, $data);
     }

@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Presentation\Web;
+namespace App\Presentation\Web\Core\Component\Ball;
 
 use App\Core\Component\Ball\Application\Repository\BallRepositoryInterface;
+use App\Core\Port\DataFormat\ApiResponseInterface;
 use App\Core\SharedKernel\Component\Point;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class BallController extends Controller
+final class BallController
 {
     /** @var BallRepositoryInterface $ball */
     public $ballRepository;
@@ -17,10 +16,14 @@ class BallController extends Controller
     /** @var LoggerInterface */
     public $logger;
 
-    public function __construct(BallRepositoryInterface $ballRepository, LoggerInterface $logger)
+    /** @var ApiResponseInterface */
+    private $apiResponse;
+
+    public function __construct(BallRepositoryInterface $ballRepository, LoggerInterface $logger, ApiResponseInterface $apiResponse)
     {
         $this->ballRepository = $ballRepository;
         $this->logger = $logger;
+        $this->apiResponse = $apiResponse;
     }
 
     /**
@@ -30,7 +33,7 @@ class BallController extends Controller
     {
         $ball = $this->ballRepository->get();
 
-        return new JsonResponse([
+        return $this->apiResponse->generate([
             'x' => $ball->getPosition()->getX(),
             'y' => $ball->getPosition()->getY(),
         ]);
@@ -48,7 +51,7 @@ class BallController extends Controller
 
         $this->ballRepository->update($ball);
 
-        return new JsonResponse([
+        return $this->apiResponse->generate([
             'x' => $ball->getPosition()->getX(),
             'y' => $ball->getPosition()->getY(),
         ]);
@@ -66,7 +69,7 @@ class BallController extends Controller
 
         $this->ballRepository->update($ball);
 
-        return new JsonResponse([
+        return $this->apiResponse->generate([
             'x' => $ball->getPosition()->getX(),
             'y' => $ball->getPosition()->getY(),
         ]);

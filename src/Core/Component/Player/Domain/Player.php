@@ -2,11 +2,11 @@
 
 namespace App\Core\Component\Player\Domain;
 
-use App\Core\Port\PointInterface;
 use App\Core\SharedKernel\Component\Point;
+use App\Core\SharedKernel\Component\PointInterface;
 use Ramsey\Uuid\Uuid;
 
-class Player implements \Serializable
+final class Player implements \Serializable
 {
     private $uuid;
 
@@ -39,12 +39,12 @@ class Player implements \Serializable
 
     public function setName($name)
     {
-        $this->name=$name;
+        $this->name = $name;
     }
 
     public function setIcon($icon)
     {
-        $this->icon=$icon;
+        $this->icon = $icon;
     }
 
     public function getTeam(): string

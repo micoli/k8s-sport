@@ -3,27 +3,31 @@
 namespace App\Core\Component\Player\Application\Service;
 
 use App\Core\Component\Player\Domain\Player;
-use App\Core\Port\PointInterface;
+use App\Core\Port\Notification\NotificationEmitterInterface;
+use App\Core\Port\ServiceAccess\ServiceAccessInterface;
 use App\Core\SharedKernel\Component\Point;
-use App\Infrastructure\Communication\Http\HttpClientInterface;
-use App\Infrastructure\WebSocket\Client\WsClientInterface;
+use App\Core\SharedKernel\Component\PointInterface;
 use Psr\Log\LoggerInterface;
 
-class PlayerService
+final class PlayerService
 {
-    /** @var HttpClientInterface */
-    private $httpClient;
+    /** @var ServiceAccessInterface */
+    private $serviceAccess;
 
-    public function __construct(LoggerInterface $logger, WsClientInterface $WsClient, HttpClientInterface $httpClient)
+    /** @var NotificationEmitterInterface */
+    private $notificationEmitter;
+
+    public function __construct(LoggerInterface $logger, NotificationEmitterInterface $notificationEmitter, ServiceAccessInterface $serviceAccess)
     {
         $this->logger = $logger;
-        $this->WsClient = $WsClient;
-        $this->httpClient = $httpClient;
+        $this->notificationEmitter = $notificationEmitter;
+        $this->serviceAccess = $serviceAccess;
     }
 
-    public function init(Player $player){
-        if ($player->getIcon()=='icon'){
-            $struct = $this->httpClient->send('GET', 'http://stadium-php/stadium/distributePlayer/'.getenv('APP_TEAM'), null);
+    public function init(Player $player)
+    {
+        if ('icon' == $player->getIcon()) {
+            $struct = $this->serviceAccess->send('GET', 'http://stadium-php/stadium/distributePlayer/'.$player->getTeam(), null);
             $player->setName($struct->name);
             $player->setIcon($struct->icon);
         }
@@ -31,9 +35,8 @@ class PlayerService
 
     public function run(Player $player)
     {
-        //$this->WsClient->send('broadcast:'.$ball->serialize());
         $ballPosition = new Point(0, 0);
-        $positionStruct = $this->httpClient->send('GET', 'http://ball-php/ball/position', null);
+        $positionStruct = $this->serviceAccess->send('GET', 'http://ball-php/ball/position', null);
         if (null !== $positionStruct) {
             $ballPosition->fromRaw($positionStruct);
             if ($player->moveTowards($ballPosition)) {
@@ -46,15 +49,14 @@ class PlayerService
                 $ballPosition->getX(),
                 $ballPosition->getY()
             ));
-            $this->WsClient->send('broadcast:'.$player->serialize());
-            $this->WsClient->close();
+            $this->notificationEmitter->broadcast($player->serialize());
         }
     }
 
     public function hitBall(Player $player, PointInterface $ballPosition)
     {
         $this->logger->info(sprintf('player hit ball'));
-        $this->httpClient->send('PUT', sprintf('http://ball-php/ball/hitto/%s/%s/%s/%s/%s',
+        $this->serviceAccess->send('PUT', sprintf('http://ball-php/ball/hitto/%s/%s/%s/%s/%s',
             40,
             'blue' == $player->getTeam() ? 5 : (100 - 5),
             5,
@@ -66,7 +68,7 @@ class PlayerService
     public function hitBallFrom(Player $player, PointInterface $ballPosition)
     {
         $this->logger->info(sprintf('player hit ball'));
-        $this->httpClient->send('PUT', sprintf('http://ball-php/ball/hit/%s/%s/%s/%s/%s',
+        $this->serviceAccess->send('PUT', sprintf('http://ball-php/ball/hit/%s/%s/%s/%s/%s',
             $player->getPosition()->getX(),
             $player->getPosition()->getY(),
             5,

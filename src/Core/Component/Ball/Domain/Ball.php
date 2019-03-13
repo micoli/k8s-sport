@@ -2,8 +2,8 @@
 
 namespace App\Core\Component\Ball\Domain;
 
-use App\Core\Port\PointInterface;
 use App\Core\SharedKernel\Component\Point;
+use App\Core\SharedKernel\Component\PointInterface;
 use Ramsey\Uuid\Uuid;
 
 final class Ball implements \Serializable

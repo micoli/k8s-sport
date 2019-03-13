@@ -6,7 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
-class StatusController extends Controller
+final class StatusController extends Controller
 {
     /**
      * @Route("/healthz",methods={"GET"})

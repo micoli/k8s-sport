@@ -27,7 +27,7 @@ final class stadiumTest extends TestCase
     {
         $players = [];
         for ($i = 0; $i < 20; ++$i) {
-            list($playerName,$icon) = $this->stadium->distributePlayer('red');
+            list($playerName, $icon) = $this->stadium->distributePlayer('red');
             $this->assertNotContains($playerName, $players);
             if (null !== $playerName) {
                 $players[] = $playerName;
@@ -35,19 +35,20 @@ final class stadiumTest extends TestCase
         }
     }
 
-    public function testUnserializeValidString(){
-        $json='{"surface":{"width":28,"height":32},"distributedPlayers":["aa","bb","cc"]}';
+    public function testUnserializeValidString()
+    {
+        $json = '{"surface":{"width":28,"height":32},"distributedPlayers":["aa","bb","cc"]}';
         $this->stadium->unserialize($json);
-        $this->assertEquals(28,$this->stadium->getSurface()->getWidth());
-        $this->assertEquals(32,$this->stadium->getSurface()->getHeight());
-        $this->assertEquals([14,16],$this->stadium->getCenter()->getCoord());
-        $this->assertEquals(3,$this->stadium->getDistributedPlayersCount());
-        $this->assertEquals($json,$this->stadium->serialize());
+        $this->assertEquals(28, $this->stadium->getSurface()->getWidth());
+        $this->assertEquals(32, $this->stadium->getSurface()->getHeight());
+        $this->assertEquals([14, 16], $this->stadium->getCenter()->getCoord());
+        $this->assertEquals(3, $this->stadium->getDistributedPlayersCount());
+        $this->assertEquals($json, $this->stadium->serialize());
     }
 
-    public function testUnserializeUnValidString(){
+    public function testUnserializeUnValidString()
+    {
         $this->expectException(\ErrorException::class);
         $this->stadium->unserialize('{"surface":{"width":123,"height":456},"distributedPlayers":["aa","bb","cc"]}aaa');
-
     }
 }

@@ -45,5 +45,6 @@ services:
         arguments:
         - "/tmp/data.txt"
 
-    App\Infrastructure\Communication\Http\HttpClientInterface: '@App\Infrastructure\Communication\Http\HttpClientGuzzle'
-    App\Infrastructure\Persistence\DataInterface: '@App\Infrastructure\Persistence\Data'
+
+    App\Core\Port\ServiceAccess\ServiceAccessInterface: '@App\Infrastructure\Communication\Http\HttpClientGuzzle'
+    App\Core\Port\Persistence\PersistenceServiceInterface: '@App\Infrastructure\Persistence\Data'

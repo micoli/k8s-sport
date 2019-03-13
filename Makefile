@@ -14,6 +14,9 @@ coverage: vendor
 infection: vendor
 	vendor/bin/infection --min-covered-msi=80 --min-msi=80
 
+dep-analyser-layer:
+	bin/deptrac analyze depfile.layers.yml --formatter-graphviz=0
+
 test: vendor
 	vendor/bin/phpunit --configuration=tests/Unit/phpunit.xml
 	vendor/bin/phpunit --configuration=tests/Integration/phpunit.xml
@@ -41,6 +44,9 @@ skaffold-run:
 
 shell:
 	kubectl exec -it $$(kubectl get pods --field-selector=status.phase=Running -o=jsonpath='{.items[0].metadata.name}' -l app=player-php) sh
+
+shell-stadium:
+	kubectl exec -it $$(kubectl get pods --field-selector=status.phase=Running -o=jsonpath='{.items[0].metadata.name}' -l app=stadium-php) sh
 
 shell-ball:
 	kubectl exec -it $$(kubectl get pods --field-selector=status.phase=Running -o=jsonpath='{.items[0].metadata.name}' -l app=ball-php) sh

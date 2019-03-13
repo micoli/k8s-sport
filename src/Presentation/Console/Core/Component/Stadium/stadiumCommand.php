@@ -1,22 +1,27 @@
 <?php
 
-namespace App\Presentation\Console;
+namespace App\Presentation\Console\Core\Component\Stadium;
 
 use App\Core\Component\Stadium\Application\Repository\StadiumRepositoryInterface;
 use App\Core\Component\Stadium\Application\Service\StadiumService;
-use App\Core\Port\StadiumInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class stadiumCommand extends ContainerAwareCommand
+final class stadiumCommand extends ContainerAwareCommand
 {
-    /** @var StadiumInterface */
-    private $stadium;
+    const maxIteration = 100;
+    const sleepTime = 500;
 
-    public function __construct(StadiumService $stadiumservice, StadiumRepositoryInterface $stadiumRepository)
+    /** @var StadiumService */
+    private $stadiumService;
+
+    /** @var StadiumRepositoryInterface */
+    private $stadiumRepository;
+
+    public function __construct(StadiumService $stadiumService, StadiumRepositoryInterface $stadiumRepository)
     {
-        $this->stadiumservice = $stadiumservice;
+        $this->stadiumService = $stadiumService;
         $this->stadiumRepository = $stadiumRepository;
         parent::__construct();
     }
@@ -30,12 +35,14 @@ class stadiumCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        for ($i = 0; $i < 1; ++$i) {
+        for ($i = 0; $i < self::maxIteration; ++$i) {
             $stadium = $this->stadiumRepository->get();
-            $this->stadiumservice->run($stadium);
+
+            $this->stadiumService->run($stadium);
+
             $this->stadiumRepository->update($stadium);
 
-            sleep(0.5);
+            usleep(self::sleepTime);
         }
     }
 }

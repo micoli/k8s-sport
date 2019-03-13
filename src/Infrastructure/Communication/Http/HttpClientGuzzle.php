@@ -2,11 +2,12 @@
 
 namespace App\Infrastructure\Communication\Http;
 
+use App\Core\Port\ServiceAccess\ServiceAccessInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\RequestException;
 use Psr\Log\LoggerInterface;
 
-class HttpClientGuzzle implements HttpClientInterface
+final class HttpClientGuzzle implements ServiceAccessInterface
 {
     /** @var LoggerInterface */
     private $logger;
@@ -30,8 +31,8 @@ class HttpClientGuzzle implements HttpClientInterface
 
             return json_decode($response->getBody()->getContents());
         } catch (RequestException $e) {
-            //$this->logger->error(sprintf("%s@%s (%s) %s\n", $method, $url, json_encode($payload), $e->getMessage()));
-            $this->logger->error(sprintf("%s@%s (%s) %s\n", $method, $url, json_encode($payload), $e->getResponse()->getBody()->getContents()));
+            $response = $e->getResponse();
+            $this->logger->error(sprintf("%s@%s, %s (%s) %s\n", $method, $url, $e->getMessage(), json_encode($payload), isset($response) ? $response->getBody()->getContents() : '-'));
 
             return null;
         }

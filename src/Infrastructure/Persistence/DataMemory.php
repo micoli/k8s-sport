@@ -2,11 +2,13 @@
 
 namespace App\Infrastructure\Persistence;
 
-class DataMemory implements DataInterface
+use App\Core\Port\Persistence\PersistenceServiceInterface;
+
+final class DataMemory implements PersistenceServiceInterface
 {
     private static $data = null;
 
-    public function load()
+    public function get(): string
     {
         if (null !== self::$data) {
             return self::$data;
@@ -15,7 +17,7 @@ class DataMemory implements DataInterface
         return '{}';
     }
 
-    public function save($data)
+    public function update(string $data)
     {
         self::$data = $data;
 

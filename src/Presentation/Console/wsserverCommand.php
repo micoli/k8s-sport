@@ -12,7 +12,7 @@ use Monolog\Logger;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
 
-class wsserverCommand extends ContainerAwareCommand
+final class wsserverCommand extends ContainerAwareCommand
 {
     public function __construct()
     {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Core\Port;
+namespace App\Core\SharedKernel\Component;
 
 interface SurfaceInterface
 {

@@ -2,10 +2,7 @@
 
 namespace App\Core\SharedKernel\Component;
 
-use App\Core\Port\SurfaceInterface;
-use App\Core\Port\PointInterface;
-
-class Surface implements SurfaceInterface
+final class Surface implements SurfaceInterface
 {
     private $width = 0;
     private $height = 0;

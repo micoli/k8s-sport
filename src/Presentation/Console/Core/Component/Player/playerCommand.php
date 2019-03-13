@@ -1,18 +1,23 @@
 <?php
 
-namespace App\Presentation\Console;
+namespace App\Presentation\Console\Core\Component\Player;
 
 use App\Core\Component\Player\Application\Repository\PlayerRepositoryInterface;
 use App\Core\Component\Player\Application\Service\PlayerService;
-use App\Core\Port\PlayerInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class playerCommand extends ContainerAwareCommand
+final class playerCommand extends ContainerAwareCommand
 {
-    /** @var PlayerInterface */
-    private $player;
+    /** @var PlayerService */
+    private $playerservice;
+
+    /** @var PlayerRepositoryInterface */
+    private $playerRepository;
+
+    const maxIteration = 100;
+    const sleepTime = 500;
 
     public function __construct(PlayerService $playerservice, PlayerRepositoryInterface $playerRepository)
     {
@@ -30,7 +35,7 @@ class playerCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        for ($i = 0; $i < 8; ++$i) {
+        for ($i = 0; $i < self::maxIteration; ++$i) {
             /** @var $player */
             $player = $this->playerRepository->get();
 
@@ -40,7 +45,7 @@ class playerCommand extends ContainerAwareCommand
 
             $this->playerRepository->update($player);
 
-            sleep(0.5);
+            usleep(self::sleepTime);
         }
     }
 }
