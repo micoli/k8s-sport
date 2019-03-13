@@ -95,7 +95,7 @@ final class WsClient implements NotificationEmitterInterface
             }
             // most significant bit MUST be 0 (close connection if frame too big)
             if ($frameHead[2] > 127) {
-                $this->close(1004);
+                $this->close();
 
                 return false;
             }
@@ -109,11 +109,11 @@ final class WsClient implements NotificationEmitterInterface
         }
         // convert frame-head to string:
         foreach (array_keys($frameHead) as $i) {
-            $frameHead[$i] = chr($frameHead[$i]);
+            $frameHead[$i] = chr((int)$frameHead[$i]);
         }
+        // generate a random mask:
+        $mask = [];
         if (true === $masked) {
-            // generate a random mask:
-            $mask = [];
             for ($i = 0; $i < 4; ++$i) {
                 $mask[$i] = chr(rand(0, 255));
             }

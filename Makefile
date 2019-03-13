@@ -17,9 +17,13 @@ infection: vendor
 dep-analyser-layer:
 	bin/deptrac analyze depfile.layers.yml --formatter-graphviz=0
 
-test: vendor
-	vendor/bin/phpunit --configuration=tests/Unit/phpunit.xml
-	vendor/bin/phpunit --configuration=tests/Integration/phpunit.xml
+phpstan:
+	vendor/bin/phpstan analyse src tests -l 7
+
+tests: vendor
+	$(MAKE) test-unit
+	$(MAKE) test-integration
+	$(MAKE) phpstan
 
 test-unit: vendor
 	vendor/bin/phpunit --configuration=tests/Unit/phpunit.xml --coverage-html=var/coverage/ --testdox --coverage-text

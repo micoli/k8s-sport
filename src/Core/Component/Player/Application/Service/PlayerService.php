@@ -17,6 +17,9 @@ final class PlayerService
     /** @var NotificationEmitterInterface */
     private $notificationEmitter;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     public function __construct(LoggerInterface $logger, NotificationEmitterInterface $notificationEmitter, ServiceAccessInterface $serviceAccess)
     {
         $this->logger = $logger;
@@ -27,16 +30,20 @@ final class PlayerService
     public function init(Player $player)
     {
         if ('icon' == $player->getIcon()) {
-            $struct = $this->serviceAccess->send('GET', 'http://stadium-php/stadium/distributePlayer/'.$player->getTeam(), null);
-            $player->setName($struct->name);
-            $player->setIcon($struct->icon);
+            $struct = $this->serviceAccess->get('http://stadium-php/stadium/distributePlayer/'.$player->getTeam());
+            if (isset($struct->name)) {
+                $player->setName($struct->name);
+            }
+            if (isset($struct->icon)) {
+                $player->setIcon($struct->icon);
+            }
         }
     }
 
     public function run(Player $player)
     {
         $ballPosition = new Point(0, 0);
-        $positionStruct = $this->serviceAccess->send('GET', 'http://ball-php/ball/position', null);
+        $positionStruct = $this->serviceAccess->get('http://ball-php/ball/position');
         if (null !== $positionStruct) {
             $ballPosition->fromRaw($positionStruct);
             if ($player->moveTowards($ballPosition)) {
@@ -56,7 +63,7 @@ final class PlayerService
     public function hitBall(Player $player, PointInterface $ballPosition)
     {
         $this->logger->info(sprintf('player hit ball'));
-        $this->serviceAccess->send('PUT', sprintf('http://ball-php/ball/hitto/%s/%s/%s/%s/%s',
+        $this->serviceAccess->put(sprintf('http://ball-php/ball/hitto/%s/%s/%s/%s/%s',
             40,
             'blue' == $player->getTeam() ? 5 : (100 - 5),
             5,
@@ -68,7 +75,7 @@ final class PlayerService
     public function hitBallFrom(Player $player, PointInterface $ballPosition)
     {
         $this->logger->info(sprintf('player hit ball'));
-        $this->serviceAccess->send('PUT', sprintf('http://ball-php/ball/hit/%s/%s/%s/%s/%s',
+        $this->serviceAccess->put(sprintf('http://ball-php/ball/hit/%s/%s/%s/%s/%s',
             $player->getPosition()->getX(),
             $player->getPosition()->getY(),
             5,

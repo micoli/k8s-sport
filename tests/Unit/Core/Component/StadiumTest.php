@@ -2,12 +2,12 @@
 
 declare(strict_types=1);
 
-namespace test\Unit\App\Core\Component;
+namespace Tests\Unit\Core\Component;
 
 use App\Core\Component\Stadium\Domain\Stadium;
 use PHPUnit\Framework\TestCase;
 
-final class stadiumTest extends TestCase
+final class StadiumTest extends TestCase
 {
     /** @var Stadium */
     private $stadium;

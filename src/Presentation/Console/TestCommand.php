@@ -2,6 +2,7 @@
 
 namespace App\Presentation\Console;
 
+use App\Core\SharedKernel\Component\Point;
 use App\Infrastructure\WebSocket\Client\WsClient;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
@@ -24,11 +25,10 @@ final class TestCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         die();
-        $ws = new WsClient([
-            'host' => '127.0.0.1',
-            'port' => 81,
-            'path' => '',
-        ]);
+        $ws = new WsClient('127.0.0.1',
+            81,
+            ''
+        );
         $result = $ws->send('broadcast:aaaaaa');
         $ws->close();
         echo $result;

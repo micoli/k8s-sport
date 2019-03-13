@@ -26,7 +26,7 @@ final class wsserverCommand extends ContainerAwareCommand
             ->setDescription('run a websocket server');
     }
 
-    private function runLogger()
+    private function runLoggerServer()
     {
         $stdout = new \Monolog\Handler\StreamHandler('php://stdout');
 
@@ -48,16 +48,8 @@ final class wsserverCommand extends ContainerAwareCommand
         $server->run();
     }
 
-    private function runNoLogger()
+    private function runServer()
     {
-        $stdout = new \Monolog\Handler\StreamHandler('php://stdout');
-
-        $logout = new Logger('SockOut');
-        $login = new Logger('Sock-In');
-
-        $login->pushHandler($stdout);
-        $logout->pushHandler($stdout);
-
         $server = IoServer::factory(
             new HttpServer(
                 new WsServer(
@@ -70,6 +62,6 @@ final class wsserverCommand extends ContainerAwareCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->runNoLogger();
+        $this->runServer();
     }
 }

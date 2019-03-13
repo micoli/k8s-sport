@@ -8,7 +8,7 @@ use Twig\Environment;
 
 final class TwigTemplate implements TemplateEngineInterface
 {
-    /** @var EngineInterface */
+    /** @var Environment */
     private $engine;
 
     public function __construct(Environment $engine)

@@ -6,7 +6,12 @@ use App\Core\Port\ServiceAccess\ServiceAccessInterface;
 
 final class HttpClientHttpie implements ServiceAccessInterface
 {
-    public function send($method, $url, $payload)
+    public function get($method)
+    {
+        return $this->send('GET', $method, null);
+    }
+
+    private function send($method, $url, $payload)
     {
         if ('GET' === $method) {
             $command = sprintf('http -b %s %s', $method, $url);
@@ -15,6 +20,16 @@ final class HttpClientHttpie implements ServiceAccessInterface
         }
         $return = shell_exec($command);
 
-        return json_decode($return);
+        return json_decode((string)$return);
+    }
+
+    public function put($method, $payload)
+    {
+        return $this->send('PUT', $method, $payload);
+    }
+
+    public function post($method, $payload)
+    {
+        return $this->send('POST', $method, $payload);
     }
 }

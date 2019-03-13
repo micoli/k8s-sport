@@ -17,7 +17,12 @@ final class HttpClientGuzzle implements ServiceAccessInterface
         $this->logger = $logger;
     }
 
-    public function send($method, $url, $payload)
+    public function get($method)
+    {
+        return $this->send('GET', $method, null);
+    }
+
+    private function send($method, $url, $payload)
     {
         try {
             $client = new Client([
@@ -36,5 +41,15 @@ final class HttpClientGuzzle implements ServiceAccessInterface
 
             return null;
         }
+    }
+
+    public function put($method, $payload)
+    {
+        return $this->send('PUT', $method, $payload);
+    }
+
+    public function post($method, $payload)
+    {
+        return $this->send('POST', $method, $payload);
     }
 }

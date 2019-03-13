@@ -4,6 +4,7 @@ namespace App\Presentation\Console\Core\Component\Player;
 
 use App\Core\Component\Player\Application\Repository\PlayerRepositoryInterface;
 use App\Core\Component\Player\Application\Service\PlayerService;
+use App\Core\Component\Player\Domain\Player;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,7 +37,7 @@ final class playerCommand extends ContainerAwareCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         for ($i = 0; $i < self::maxIteration; ++$i) {
-            /** @var $player */
+            /** @var Player $player */
             $player = $this->playerRepository->get();
 
             $this->playerservice->init($player);

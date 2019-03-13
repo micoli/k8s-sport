@@ -16,7 +16,7 @@ final class Data implements PersistenceServiceInterface
     public function get(): string
     {
         if (file_exists($this->dataPath)) {
-            return file_get_contents($this->dataPath);
+            return (string) file_get_contents($this->dataPath);
         }
 
         return '{}';

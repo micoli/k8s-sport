@@ -112,7 +112,7 @@ final class Point implements PointInterface
         return $step;
     }
 
-    public function getAngleBetween(Point $fromPoint)
+    public function getAngleBetween(PointInterface $fromPoint)
     {
         return rad2deg(atan2($this->getY() - $fromPoint->getY(), $this->getX() - $fromPoint->getX()));
     }

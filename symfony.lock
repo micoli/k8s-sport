@@ -56,6 +56,9 @@
     "infection/infection": {
         "version": "0.12.2"
     },
+    "jean85/pretty-package-versions": {
+        "version": "1.2"
+    },
     "justinrainbow/json-schema": {
         "version": "5.2.8"
     },
@@ -64,6 +67,27 @@
     },
     "myclabs/deep-copy": {
         "version": "1.8.1"
+    },
+    "nette/bootstrap": {
+        "version": "v2.4.6"
+    },
+    "nette/di": {
+        "version": "v2.4.15"
+    },
+    "nette/finder": {
+        "version": "v2.5.0"
+    },
+    "nette/neon": {
+        "version": "v3.0.0"
+    },
+    "nette/php-generator": {
+        "version": "v3.2.1"
+    },
+    "nette/robot-loader": {
+        "version": "v3.1.1"
+    },
+    "nette/utils": {
+        "version": "v2.5.3"
     },
     "nikic/php-parser": {
         "version": "v4.2.1"
@@ -97,6 +121,12 @@
     },
     "phpspec/prophecy": {
         "version": "1.8.0"
+    },
+    "phpstan/phpdoc-parser": {
+        "version": "0.3.1"
+    },
+    "phpstan/phpstan": {
+        "version": "0.11.3"
     },
     "phpunit/php-code-coverage": {
         "version": "7.0.2"

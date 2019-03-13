@@ -19,6 +19,9 @@ final class StadiumController
     /** @var ApiResponseInterface */
     private $apiResponse;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     public function __construct(StadiumRepositoryInterface $stadiumRepository, LoggerInterface $logger, TemplateEngineInterface $templateEngine, ApiResponseInterface $apiResponse)
     {
         $this->stadiumRepository = $stadiumRepository;

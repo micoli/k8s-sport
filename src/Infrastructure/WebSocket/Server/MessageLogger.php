@@ -2,33 +2,27 @@
 
 namespace App\Infrastructure\WebSocket\Server;
 
-use Ratchet\MessageComponentInterface;
-use Ratchet\ConnectionInterface;
-use Ratchet\WebSocket\WsServerInterface;
+use Psr\Log\LoggerAwareInterface;
+use Psr\Log\LoggerAwareTrait;
 use Psr\Log\LoggerInterface;
 use Psr\Log\NullLogger;
 use Ratchet\AbstractConnectionDecorator;
-use Psr\Log\LoggerAwareInterface;
-use Psr\Log\LoggerAwareTrait;
+use Ratchet\ConnectionInterface;
+use Ratchet\MessageComponentInterface;
+use Ratchet\WebSocket\WsServerInterface;
 
 /**
  * A Ratchet component that wraps PSR\Log loggers tracking received and sent messages.
  */
 final class MessageLogger implements MessageComponentInterface, WsServerInterface
 {
-    /**
-     * @var Monolog\Logger|null
-     */
+    /** @var LoggerInterface */
     private $_in;
 
-    /**
-     * @var Monolog\Logger|null
-     */
+    /** @var LoggerInterface */
     private $_out;
 
-    /**
-     * @var Ratchet\Component\MessageComponentInterface|null
-     */
+    /** @var MessageComponentInterface */
     private $_component;
 
     /**
@@ -40,7 +34,7 @@ final class MessageLogger implements MessageComponentInterface, WsServerInterfac
 
     private $_connections;
 
-    public function __construct(MessageComponentInterface $component = null, LoggerInterface $incoming = null, LoggerInterface $outgoing = null)
+    public function __construct(MessageComponentInterface $component, LoggerInterface $incoming = null, LoggerInterface $outgoing = null)
     {
         $this->_component = $component;
         $this->_connections = new \SplObjectStorage();
@@ -64,7 +58,8 @@ final class MessageLogger implements MessageComponentInterface, WsServerInterfac
     {
         ++$this->_i;
 
-        $this->_in->info('onOpen', ['#open' => $this->_i, 'id' => $conn->resourceId, 'ip' => $conn->remoteAddress]);
+        /* , 'id' => $conn->resourceId, 'ip' => $conn->remoteAddress    */
+        $this->_in->info('onOpen', ['#open' => $this->_i]);
 
         $decoratedConn = new MessageLoggedConnection($conn);
         $decoratedConn->setLogger($this->_out);
@@ -79,7 +74,8 @@ final class MessageLogger implements MessageComponentInterface, WsServerInterfac
      */
     public function onMessage(ConnectionInterface $from, $msg)
     {
-        $this->_in->info('onMsg', ['from' => $from->resourceId, 'len' => strlen($msg), 'msg' => $msg]);
+        /* 'from' => $from->resourceId, */
+        $this->_in->info('onMsg', ['len' => strlen($msg), 'msg' => $msg]);
 
         $this->_component->onMessage($this->_connections[$from], $msg);
     }
@@ -91,7 +87,8 @@ final class MessageLogger implements MessageComponentInterface, WsServerInterfac
     {
         --$this->_i;
 
-        $this->_in->info('onClose', ['#open' => $this->_i, 'id' => $conn->resourceId]);
+        /* , 'id' => $conn->resourceId */
+        $this->_in->info('onClose', ['#open' => $this->_i]);
 
         $decorated = $this->_connections[$conn];
         $this->_connections->detach($conn);
@@ -104,7 +101,8 @@ final class MessageLogger implements MessageComponentInterface, WsServerInterfac
      */
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
-        $this->_in->error("onError: ({$e->getCode()}): {$e->getMessage()}", ['id' => $conn->resourceId, 'file' => $e->getFile(), 'line' => $e->getLine()]);
+        /* , 'id' => $conn->resourceId */
+        $this->_in->error("onError: ({$e->getCode()}): {$e->getMessage()}", ['file' => $e->getFile(), 'line' => $e->getLine()]);
 
         $this->_component->onError($this->_connections[$conn], $e);
     }
@@ -126,6 +124,8 @@ final class MessageLoggedConnection extends AbstractConnectionDecorator implemen
 {
     use LoggerAwareTrait;
 
+    private $resourceId;
+
     public function send($data)
     {
         $this->logger->info('send', ['to' => $this->resourceId, 'len' => strlen($data), 'msg' => $data]);
@@ -137,6 +137,6 @@ final class MessageLoggedConnection extends AbstractConnectionDecorator implemen
 
     public function close($code = null)
     {
-        $this->getConnection()->close($code);
+        $this->getConnection()->close();
     }
 }

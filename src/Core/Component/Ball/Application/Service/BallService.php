@@ -11,6 +11,9 @@ final class BallService
     /** @var NotificationEmitterInterface */
     private $notificationEmitter;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     public function __construct(LoggerInterface $logger, NotificationEmitterInterface $notificationEmitter)
     {
         $this->logger = $logger;

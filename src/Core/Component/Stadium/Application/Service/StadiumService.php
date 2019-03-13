@@ -15,6 +15,9 @@ final class StadiumService
     /** @var NotificationEmitterInterface */
     private $notificationEmitter;
 
+    /** @var LoggerInterface */
+    private $logger;
+
     public function __construct(LoggerInterface $logger, NotificationEmitterInterface $notificationEmitter, ServiceAccessInterface $serviceAccess)
     {
         $this->logger = $logger;
