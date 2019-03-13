@@ -17,39 +17,40 @@ final class HttpClientGuzzle implements ServiceAccessInterface
         $this->logger = $logger;
     }
 
-    public function get($method)
+    public function get($service, $method)
     {
-        return $this->send('GET', $method, null);
+        return $this->send('GET', $service, $method, null);
     }
 
-    private function send($method, $url, $payload)
+    private function send($verb, $service, $method, $payload)
     {
+        $url = sprintf('http://%s/%s', $service, $method);
         try {
             $client = new Client([
                 'connect_timeout' => 3,
             ]);
             if (null === $payload) {
-                $response = $client->request($method, $url);
+                $response = $client->request($verb, $url);
             } else {
-                $response = $client->request($method, $url, ['json' => $payload]);
+                $response = $client->request($verb, $url, ['json' => $payload]);
             }
 
             return json_decode($response->getBody()->getContents());
         } catch (RequestException $e) {
             $response = $e->getResponse();
-            $this->logger->error(sprintf("%s@%s, %s (%s) %s\n", $method, $url, $e->getMessage(), json_encode($payload), isset($response) ? $response->getBody()->getContents() : '-'));
+            $this->logger->error(sprintf("%s@%s, %s (%s) %s\n", $verb, $url, $e->getMessage(), json_encode($payload), isset($response) ? $response->getBody()->getContents() : '-'));
 
             return null;
         }
     }
 
-    public function put($method, $payload)
+    public function put($service, $method, $payload)
     {
-        return $this->send('PUT', $method, $payload);
+        return $this->send('PUT', $service, $method, $payload);
     }
 
-    public function post($method, $payload)
+    public function post($service, $method, $payload)
     {
-        return $this->send('POST', $method, $payload);
+        return $this->send('POST', $service, $method, $payload);
     }
 }

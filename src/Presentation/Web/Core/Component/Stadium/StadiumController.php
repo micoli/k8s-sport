@@ -51,7 +51,10 @@ final class StadiumController
         $stadium = $this->stadiumRepository->get();
 
         return $this->apiResponse->generate([
-            'surface' => $stadium->getSurface(),
+            'surface' => [
+                'width' => $stadium->getSurface()->getWidth(),
+                'height' => $stadium->getSurface()->getHeight(),
+            ],
         ]);
     }
 

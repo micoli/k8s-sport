@@ -2,7 +2,6 @@
 
 namespace App\Core\Component\Stadium\Domain;
 
-use App\Core\SharedKernel\Component\Point;
 use App\Core\SharedKernel\Component\PointInterface;
 use App\Core\SharedKernel\Component\Surface;
 use App\Core\SharedKernel\Component\SurfaceInterface;

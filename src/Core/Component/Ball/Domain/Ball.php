@@ -4,6 +4,8 @@ namespace App\Core\Component\Ball\Domain;
 
 use App\Core\SharedKernel\Component\Point;
 use App\Core\SharedKernel\Component\PointInterface;
+use App\Core\SharedKernel\Component\Surface;
+use App\Core\SharedKernel\Component\SurfaceInterface;
 use Ramsey\Uuid\Uuid;
 
 final class Ball implements \Serializable
@@ -13,6 +15,9 @@ final class Ball implements \Serializable
     /** @var PointInterface */
     private $position;
 
+    /** @var SurfaceInterface */
+    private $constraint;
+
     private $speed = 0;
 
     private $angle = 0;
@@ -20,6 +25,16 @@ final class Ball implements \Serializable
     public function getUUID(): string
     {
         return $this->uuid;
+    }
+
+    public function getConstraint(): SurfaceInterface
+    {
+        return $this->constraint;
+    }
+
+    public function setConstraint(SurfaceInterface $constraint)
+    {
+        return $this->constraint = $constraint;
     }
 
     public function getPosition(): PointInterface
@@ -69,7 +84,7 @@ final class Ball implements \Serializable
     {
         if ($this->getPosition()->getX() > (40 - 10) && $this->getPosition()->getX() < (40 + 10)) {
             if ($this->getPosition()->getY() < 10 || $this->getPosition()->getY() > 90) {
-                $this->position = new Point(0, 0);
+                $this->position = $this->getConstraint()->getCenter();
                 $this->speed = 0;
 
                 return true;
@@ -86,6 +101,7 @@ final class Ball implements \Serializable
         $this->speed = isset($dto->speed) ? $dto->speed : 0;
         $this->angle = isset($dto->angle) ? $dto->angle : 25;
         $this->position = isset($dto->position) ? new Point($dto->position->x, $dto->position->y) : new Point(0, 0);
+        $this->constraint = isset($dto->constraint) ? new Surface($dto->constraint->width, $dto->constraint->height) : new Surface(0, 0);
 
         return $this;
     }
@@ -100,6 +116,10 @@ final class Ball implements \Serializable
             'position' => [
                 'x' => $this->getPosition()->getX(),
                 'y' => $this->getPosition()->getY(),
+            ],
+            'constraint' => [
+                'width' => $this->getConstraint()->getWidth(),
+                'height' => $this->getConstraint()->getHeight(),
             ],
         ]);
     }

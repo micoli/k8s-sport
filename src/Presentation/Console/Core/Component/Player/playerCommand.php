@@ -11,14 +11,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class playerCommand extends ContainerAwareCommand
 {
+    const maxIteration = 10;
+
+    const sleepTime = 500;
+
     /** @var PlayerService */
     private $playerservice;
 
     /** @var PlayerRepositoryInterface */
     private $playerRepository;
-
-    const maxIteration = 100;
-    const sleepTime = 500;
 
     public function __construct(PlayerService $playerservice, PlayerRepositoryInterface $playerRepository)
     {
@@ -46,7 +47,7 @@ final class playerCommand extends ContainerAwareCommand
 
             $this->playerRepository->update($player);
 
-            usleep(self::sleepTime);
+            usleep(self::sleepTime * 1000);
         }
     }
 }

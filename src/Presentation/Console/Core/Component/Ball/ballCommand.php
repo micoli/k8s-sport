@@ -10,14 +10,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ballCommand extends ContainerAwareCommand
 {
+    const maxIteration = 100;
+
+    const sleepTime = 500;
+
     /** @var BallService */
     private $ballservice;
 
     /** @var BallRepositoryInterface */
     private $ballRepository;
-
-    const maxIteration = 100;
-    const sleepTime = 500;
 
     public function __construct(BallService $ballservice, BallRepositoryInterface $ballRepository)
     {
@@ -38,11 +39,13 @@ final class ballCommand extends ContainerAwareCommand
         for ($i = 0; $i < self::maxIteration; ++$i) {
             $ball = $this->ballRepository->get();
 
+            $this->ballservice->init($ball);
+
             $this->ballservice->run($ball);
 
             $this->ballRepository->update($ball);
 
-            usleep(self::sleepTime);
+            usleep(self::sleepTime * 1000);
         }
     }
 }

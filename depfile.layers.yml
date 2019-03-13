@@ -110,6 +110,12 @@ layers:
           - type: className
             regex: ^Psr\\.*
 
+          #rules exceptions
+          - type: className
+            regex: ^Ramsey\\Uuid\\Uuid
+          - type: className
+            regex: ^Symfony\\Component\\Routing\\Annotation\\Route
+
 ##############################################################
 ##   RULES SET
 ##
@@ -173,6 +179,9 @@ ruleset:
     - Domain
     - Application
     - Port-PSR
+
+
+    - Vendor
 
   SharedKernel-Application:
     - PhpExtension

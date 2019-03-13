@@ -4,9 +4,9 @@ namespace App\Core\Port\ServiceAccess;
 
 interface ServiceAccessInterface
 {
-    public function get($method);
+    public function get($service, $method);
 
-    public function put($method, $payload);
+    public function put($service, $method, $payload);
 
-    public function post($method, $payload);
+    public function post($service, $method, $payload);
 }

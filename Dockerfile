@@ -5,6 +5,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     mkdir /application; \
     apk add make git httpie
 
+RUN composer global require hirak/prestissimo
+
 ARG APP_ENV
 ENV APP_ENV=$APP_ENV
 
@@ -12,7 +14,7 @@ WORKDIR /application
 
 COPY composer.* ./
 COPY symfony.lock ./
-RUN composer install --no-dev --no-scripts
+RUN composer install --no-dev --no-scripts --prefer-dist
 
 
 COPY phpunit.xml.dist ./

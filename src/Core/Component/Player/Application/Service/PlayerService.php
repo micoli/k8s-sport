@@ -29,8 +29,8 @@ final class PlayerService
 
     public function init(Player $player)
     {
-        if ('icon' == $player->getIcon()) {
-            $struct = $this->serviceAccess->get('http://stadium-php/stadium/distributePlayer/'.$player->getTeam());
+        if (null === $player->getIcon()) {
+            $struct = $this->serviceAccess->get('stadium-php', 'stadium/distributePlayer/'.$player->getTeam());
             if (isset($struct->name)) {
                 $player->setName($struct->name);
             }
@@ -43,7 +43,7 @@ final class PlayerService
     public function run(Player $player)
     {
         $ballPosition = new Point(0, 0);
-        $positionStruct = $this->serviceAccess->get('http://ball-php/ball/position');
+        $positionStruct = $this->serviceAccess->get('ball-php', 'ball/position');
         if (null !== $positionStruct) {
             $ballPosition->fromRaw($positionStruct);
             if ($player->moveTowards($ballPosition)) {
@@ -63,24 +63,30 @@ final class PlayerService
     public function hitBall(Player $player, PointInterface $ballPosition)
     {
         $this->logger->info(sprintf('player hit ball'));
-        $this->serviceAccess->put(sprintf('http://ball-php/ball/hitto/%s/%s/%s/%s/%s',
-            40,
-            'blue' == $player->getTeam() ? 5 : (100 - 5),
-            5,
-            $player->getUUID(),
-            $player->getName()
-        ), null);
+        $this->serviceAccess->put('ball-php',
+            sprintf('ball/hitto/%s/%s/%s/%s/%s',
+                40,
+                'blue' == $player->getTeam() ? 5 : (100 - 5),
+                5,
+                $player->getUUID(),
+                $player->getName()
+            ),
+            null
+        );
     }
 
     public function hitBallFrom(Player $player, PointInterface $ballPosition)
     {
         $this->logger->info(sprintf('player hit ball'));
-        $this->serviceAccess->put(sprintf('http://ball-php/ball/hit/%s/%s/%s/%s/%s',
-            $player->getPosition()->getX(),
-            $player->getPosition()->getY(),
-            5,
-            $player->getUUID(),
-            $player->getName()
-        ), null);
+        $this->serviceAccess->put('ball-php',
+            sprintf('ball/hit/%s/%s/%s/%s/%s',
+                $player->getPosition()->getX(),
+                $player->getPosition()->getY(),
+                5,
+                $player->getUUID(),
+                $player->getName()
+            ),
+            null
+        );
     }
 }

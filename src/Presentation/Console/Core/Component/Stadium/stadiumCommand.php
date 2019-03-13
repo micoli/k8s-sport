@@ -11,6 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 final class stadiumCommand extends ContainerAwareCommand
 {
     const maxIteration = 100;
+
     const sleepTime = 500;
 
     /** @var StadiumService */
@@ -42,7 +43,7 @@ final class stadiumCommand extends ContainerAwareCommand
 
             $this->stadiumRepository->update($stadium);
 
-            usleep(self::sleepTime);
+            usleep(self::sleepTime * 1000);
         }
     }
 }

@@ -27,12 +27,12 @@ final class Player implements \Serializable
         return $this->uuid;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function getIcon(): string
+    public function getIcon(): ?string
     {
         return $this->icon;
     }
@@ -75,8 +75,8 @@ final class Player implements \Serializable
     {
         $dto = json_decode($dto);
         $this->uuid = isset($dto->uuid) ? $dto->uuid : Uuid::uuid4();
-        $this->name = isset($dto->name) ? $dto->name : 'name';
-        $this->icon = isset($dto->icon) ? $dto->icon : 'icon';
+        $this->name = isset($dto->name) ? $dto->name : null;
+        $this->icon = isset($dto->icon) ? $dto->icon : null;
         $this->team = isset($dto->team) ? $dto->team : getenv('APP_TEAM');
         $this->position = isset($dto->position) ? new Point($dto->position->x, $dto->position->y) : new Point(0, 0);
 

@@ -109,7 +109,7 @@ final class WsClient implements NotificationEmitterInterface
         }
         // convert frame-head to string:
         foreach (array_keys($frameHead) as $i) {
-            $frameHead[$i] = chr((int)$frameHead[$i]);
+            $frameHead[$i] = chr((int) $frameHead[$i]);
         }
         // generate a random mask:
         $mask = [];

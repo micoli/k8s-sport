@@ -23,6 +23,7 @@ phpstan:
 tests: vendor
 	$(MAKE) test-unit
 	$(MAKE) test-integration
+	$(MAKE) dep-analyser-layer
 	$(MAKE) phpstan
 
 test-unit: vendor
