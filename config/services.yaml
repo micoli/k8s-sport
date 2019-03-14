@@ -30,8 +30,8 @@ services:
     App\Core\SharedKernel\Component\Dimension:
         public: true
         arguments:
-         - 80
-         - 100
+         - 68
+         - 105
 
     App\Infrastructure\WebSocket\Client\WsClient:
         public: true
@@ -43,7 +43,7 @@ services:
     App\Infrastructure\Persistence\Data:
         public: true
         arguments:
-        - "/tmp/data.txt"
+        - "/tmpfs/data.txt"
 
 
     App\Core\Port\ServiceAccess\ServiceAccessInterface: '@App\Infrastructure\Communication\Http\HttpClientGuzzle'

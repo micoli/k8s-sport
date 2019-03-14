@@ -41,7 +41,10 @@ final class playerCommand extends ContainerAwareCommand
             /** @var Player $player */
             $player = $this->playerRepository->get();
 
-            $this->playerservice->init($player);
+            if (null === $player->getUUID()) {
+                $this->playerservice->create($player);
+                $this->playerRepository->update($player);
+            }
 
             $this->playerservice->run($player);
 

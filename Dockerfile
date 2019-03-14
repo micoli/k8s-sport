@@ -1,9 +1,15 @@
-FROM phpearth/php:7.3-nginx
+FROM wyveo/nginx-php-fpm
 
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer;\
-    mkdir -p /var/log; \
+RUN mkdir -p /var/log; \
     mkdir /application; \
-    apk add make git httpie
+    apt-get update && \
+    apt-get install -y \
+        make \
+        git \
+        httpie \
+        curl; \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer; \
+    apt-get -y autoclean
 
 RUN composer global require hirak/prestissimo
 
@@ -32,7 +38,7 @@ COPY config config
 COPY src src
 
 RUN composer dump-autoload; \
-    mkdir var; \
+    mkdir var /tmpfs; \
     chmod 777 var; \
     bin/console cache:warmup
 

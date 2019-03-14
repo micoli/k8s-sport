@@ -26,13 +26,13 @@ final class PlayerController
     }
 
     /**
-     * @Route("/player/position")
+     * @Route("/player/coordinates")
      */
-    public function position()
+    public function coordinates()
     {
         $player = $this->playerRepository->get();
 
-        return $this->apiResponse->generate(['x' => $player->getPosition()->getY(), 'y' => $player->getPosition()->getY()]);
+        return $this->apiResponse->generate(['x' => $player->getCoordinates()->getY(), 'y' => $player->getCoordinates()->getY()]);
     }
 
     /**

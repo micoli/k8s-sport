@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 final class ballCommand extends ContainerAwareCommand
 {
-    const maxIteration = 100;
+    const maxIteration = 4;
 
     const sleepTime = 500;
 
@@ -39,7 +39,10 @@ final class ballCommand extends ContainerAwareCommand
         for ($i = 0; $i < self::maxIteration; ++$i) {
             $ball = $this->ballRepository->get();
 
-            $this->ballservice->init($ball);
+            if ('-' === $ball->getUUID()) {
+                $this->ballservice->create($ball);
+                $this->ballRepository->update($ball);
+            }
 
             $this->ballservice->run($ball);
 

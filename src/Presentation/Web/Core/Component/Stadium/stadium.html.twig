@@ -68,15 +68,14 @@
               break;
             case 'ball':
               node.src='icons/svg/football.svg'
-              node.src='icons/svg/football.svg'
               //node.style.backgroundColor = 'yellow';
               break;
           }
           document.getElementById("stadium").appendChild(node);
         }
         node.style.opacity = 1;
-        node.style.top = (d.position.y * 4) + 'px';
-        node.style.left = (d.position.x * 4) + 'px';
+        node.style.top = (d.coordinates.x * 8) + 'px';
+        node.style.left = (d.coordinates.y * 8) + 'px';
 
         //writeToScreen('<span style="color: blue;">RESPONSE: ' + evt.data + '</span>');
       }
@@ -108,7 +107,8 @@
     {{  balls|json_encode }}
 #}
 <div id="stadium"
-     style="width:{{ surface.getWidth()*4 }}px;height:{{ surface.getHeight()*4 }}px;background-color: seagreen;border:1px solid black;position:relative">
+     style="width:{{ surface.getHeight()*8 }}px;height:{{ surface.getWidth()*8 }}px;position:relative;">
+    <img src="Foot_field_AG3.svg" style="width: 100%; height: auto;"></img>
 </div>
 
 <div id="ws-output"></div>

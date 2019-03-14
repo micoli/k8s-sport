@@ -27,15 +27,15 @@ final class BallController
     }
 
     /**
-     * @Route("/ball/position",methods={"GET"})
+     * @Route("/ball/coordinates",methods={"GET"})
      */
-    public function position()
+    public function coordinates()
     {
         $ball = $this->ballRepository->get();
 
         return $this->apiResponse->generate([
-            'x' => $ball->getPosition()->getX(),
-            'y' => $ball->getPosition()->getY(),
+            'x' => $ball->getCoordinates()->getX(),
+            'y' => $ball->getCoordinates()->getY(),
         ]);
     }
 
@@ -52,8 +52,8 @@ final class BallController
         $this->ballRepository->update($ball);
 
         return $this->apiResponse->generate([
-            'x' => $ball->getPosition()->getX(),
-            'y' => $ball->getPosition()->getY(),
+            'x' => $ball->getCoordinates()->getX(),
+            'y' => $ball->getCoordinates()->getY(),
         ]);
     }
 
@@ -70,8 +70,8 @@ final class BallController
         $this->ballRepository->update($ball);
 
         return $this->apiResponse->generate([
-            'x' => $ball->getPosition()->getX(),
-            'y' => $ball->getPosition()->getY(),
+            'x' => $ball->getCoordinates()->getX(),
+            'y' => $ball->getCoordinates()->getY(),
         ]);
     }
 }

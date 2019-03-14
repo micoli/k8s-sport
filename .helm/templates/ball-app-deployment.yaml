@@ -35,5 +35,13 @@ spec:
           httpGet:
             path: /healthz
             port: nginx
-          initialDelaySeconds: 3
-          periodSeconds: 3
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumeMounts:
+      - mountPath: /tmpfs
+        name: tmpfs
+      volumes:
+      - name: tmpfs
+        emptyDir:
+        medium: Memory
+        sizeLimit: "10Mi"

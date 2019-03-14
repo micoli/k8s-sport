@@ -25,3 +25,11 @@ https://blog.octo.com/architecture-hexagonale-trois-principes-et-un-exemple-dimp
 
 curl -LS https://github.com/sensiolabs-de/deptrac/releases/download/0.3.0/deptrac.phar -o bin/deptrac
 chmod +x bin/deptrac
+
+
+
+
+# Credits:
+ 
+footbal field : Par Original téléversé par Greatpatton sur Wikipédia français. — Transféré de fr.wikipedia à Commons., CC BY-SA 1.0, https://commons.wikimedia.org/w/index.php?curid=3536881
+icons : https://www.flaticon.com/profile/license/fi/SwkgUxJEL3JglsTgaFIv-7Lfhb7w7SVQlh01IZZJdyEcJTuXsEIGiSfmcqOkrCs1LrSwDgBY6BtVRW3YHRtnXm5ZqI8S_v-TqjyDMhICMVheDM6yWOg70Kk1mbWE7SzZTY1sgkvuJD6V6muJee7iFL_D3FMsASkCPEXR8u3ZQcCrbmVlLBCPsB6s4mNjeT_jdgnaaIGyBtErNcrn7cfCQQ,,

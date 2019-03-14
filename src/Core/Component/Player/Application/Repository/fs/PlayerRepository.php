@@ -18,10 +18,10 @@ final class PlayerRepository implements PlayerRepositoryInterface
 
     public function get(): Player
     {
-        $ball = new Player();
-        $ball->unserialize($this->persistenceService->get());
+        $player = new Player();
+        $player->unserialize($this->persistenceService->get());
 
-        return $ball;
+        return $player;
     }
 
     public function update(\Serializable $entity)

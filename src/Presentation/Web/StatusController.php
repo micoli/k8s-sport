@@ -11,7 +11,7 @@ final class StatusController extends Controller
     /**
      * @Route("/healthz",methods={"GET"})
      */
-    public function position()
+    public function coordinates()
     {
         return new JsonResponse([
             'status' => true,

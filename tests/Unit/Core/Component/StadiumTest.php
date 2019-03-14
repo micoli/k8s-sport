@@ -37,7 +37,7 @@ final class StadiumTest extends TestCase
 
     public function testUnserializeValidString()
     {
-        $json = '{"surface":{"width":28,"height":32},"distributedPlayers":["aa","bb","cc"]}';
+        $json = '{"surface":{"width":28,"height":32},"goalRangeWWidth":7,"distributedPlayers":["aa","bb","cc"]}';
         $this->stadium->unserialize($json);
         $this->assertEquals(28, $this->stadium->getSurface()->getWidth());
         $this->assertEquals(32, $this->stadium->getSurface()->getHeight());
@@ -49,6 +49,6 @@ final class StadiumTest extends TestCase
     public function testUnserializeUnValidString()
     {
         $this->expectException(\ErrorException::class);
-        $this->stadium->unserialize('{"surface":{"width":123,"height":456},"distributedPlayers":["aa","bb","cc"]}aaa');
+        $this->stadium->unserialize('{"surface":{"width":123,"height":456},"goalRangeWWidth":7,"distributedPlayers":["aa","bb","cc"]}aaa');
     }
 }

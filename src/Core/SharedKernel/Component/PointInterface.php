@@ -30,7 +30,7 @@ interface PointInterface
 
     public function move($angle, $strength, $contraintWidth, $contraintHeight);
 
-    public function moveTowards(PointInterface $finalPosition, $step);
+    public function moveTowards(PointInterface $finalCoordinates, $step);
 
     public function getAngleBetween(PointInterface $fromPoint);
 }

@@ -8,6 +8,7 @@ use App\Core\Port\ServiceAccess\ServiceAccessInterface;
 use App\Core\SharedKernel\Component\Point;
 use App\Core\SharedKernel\Component\PointInterface;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Uuid;
 
 final class PlayerService
 {
@@ -27,9 +28,20 @@ final class PlayerService
         $this->serviceAccess = $serviceAccess;
     }
 
-    public function init(Player $player)
+    public function create(Player $player)
     {
-        if (null === $player->getIcon()) {
+        $player->setUUID(Uuid::uuid4());
+
+        $player->setPosition(getenv('APP_PLAYER_POSITION'));
+
+        $player->setSkill(getenv('APP_PLAYER_SKILL'));
+
+        $player->setTeam(getenv('APP_PLAYER_TEAM'));
+
+        $player->setCoordinates(new Point(0, 0));
+
+        $nb = 0;
+        while (null === $player->getName() && $nb++ < 10) {
             $struct = $this->serviceAccess->get('stadium-php', 'stadium/distributePlayer/'.$player->getTeam());
             if (isset($struct->name)) {
                 $player->setName($struct->name);
@@ -42,25 +54,28 @@ final class PlayerService
 
     public function run(Player $player)
     {
-        $ballPosition = new Point(0, 0);
-        $positionStruct = $this->serviceAccess->get('ball-php', 'ball/position');
-        if (null !== $positionStruct) {
-            $ballPosition->fromRaw($positionStruct);
-            if ($player->moveTowards($ballPosition)) {
-                $this->hitBall($player, $ballPosition);
+        $coordinatesStruct = $this->serviceAccess->get('ball-php', 'ball/coordinates');
+        if (null !== $coordinatesStruct) {
+            $ballCoordinates = new Point(0, 0);
+            $ballCoordinates->fromRaw($coordinatesStruct);
+
+            $player->moveTowards($ballCoordinates);
+
+            if ($player->getCoordinates()->distanceTo($ballCoordinates) < $player->getDistanceToHit()) {
+                $this->hitBall($player, $ballCoordinates);
             }
 
             $this->logger->info(sprintf('player run %sx%s, ball :%sx%s',
-                $player->getPosition()->getX(),
-                $player->getPosition()->getY(),
-                $ballPosition->getX(),
-                $ballPosition->getY()
+                $player->getCoordinates()->getX(),
+                $player->getCoordinates()->getY(),
+                $ballCoordinates->getX(),
+                $ballCoordinates->getY()
             ));
             $this->notificationEmitter->broadcast($player->serialize());
         }
     }
 
-    public function hitBall(Player $player, PointInterface $ballPosition)
+    public function hitBall(Player $player, PointInterface $ballCoordinates)
     {
         $this->logger->info(sprintf('player hit ball'));
         $this->serviceAccess->put('ball-php',
@@ -75,13 +90,13 @@ final class PlayerService
         );
     }
 
-    public function hitBallFrom(Player $player, PointInterface $ballPosition)
+    public function hitBallFrom(Player $player, PointInterface $ballCoordinates)
     {
         $this->logger->info(sprintf('player hit ball'));
         $this->serviceAccess->put('ball-php',
             sprintf('ball/hit/%s/%s/%s/%s/%s',
-                $player->getPosition()->getX(),
-                $player->getPosition()->getY(),
+                $player->getCoordinates()->getX(),
+                $player->getCoordinates()->getY(),
                 5,
                 $player->getUUID(),
                 $player->getName()

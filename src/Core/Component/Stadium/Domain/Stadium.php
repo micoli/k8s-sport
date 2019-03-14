@@ -11,6 +11,8 @@ final class Stadium implements \Serializable
     /** @var SurfaceInterface */
     private $surface;
 
+    private $goalRangeWidth = 7;
+
     private $distributedPlayers = [];
 
     public function unserialize($dtoStr)
@@ -20,7 +22,9 @@ final class Stadium implements \Serializable
             throw new \ErrorException('Unserialize error in '.$dtoStr);
         }
 
-        $this->surface = isset($dto->surface) ? new Surface($dto->surface->width, $dto->surface->height) : new Surface(80, 100);
+        $this->surface = isset($dto->surface) ? new Surface($dto->surface->width, $dto->surface->height) : new Surface(68, 105);
+
+        $this->goalRangeWidth = isset($dto->goalRangeWidth) ? $dto->goalRangeWidth : 7;
 
         $this->distributedPlayers = isset($dto->distributedPlayers) ? $dto->distributedPlayers : [];
     }
@@ -32,6 +36,7 @@ final class Stadium implements \Serializable
                 'width' => $this->surface->getWidth(),
                 'height' => $this->surface->getHeight(),
             ],
+            'goalRangeWWidth' => $this->goalRangeWidth,
             'distributedPlayers' => $this->distributedPlayers,
         ]);
     }
@@ -39,6 +44,11 @@ final class Stadium implements \Serializable
     public function getSurface(): SurfaceInterface
     {
         return $this->surface;
+    }
+
+    public function getGoalRangeWidth()
+    {
+        return $this->goalRangeWidth;
     }
 
     public function getCenter(): PointInterface

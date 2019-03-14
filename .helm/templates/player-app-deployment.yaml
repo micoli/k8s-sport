@@ -29,8 +29,13 @@ spec:
               key: APP_ENV
         - name: APP_TYPE
           value: player
-        - name: APP_TEAM
+        - name: APP_PLAYER_TEAM
           value: blue
+        - name: APP_PLAYER_POSITION
+          value: attack
+        - name: APP_PLAYER_SKILL
+          value: "1"
+
         ports:
         - name: nginx
           containerPort: 80
@@ -38,9 +43,16 @@ spec:
           httpGet:
             path: /healthz
             port: nginx
-          initialDelaySeconds: 3
-          periodSeconds: 3
-
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumeMounts:
+      - mountPath: /tmpfs
+        name: tmpfs
+      volumes:
+      - name: tmpfs
+        emptyDir:
+        medium: Memory
+        sizeLimit: "10Mi"
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -72,8 +84,12 @@ spec:
               key: APP_ENV
         - name: APP_TYPE
           value: player
-        - name: APP_TEAM
+        - name: APP_PLAYER_TEAM
           value: red
+        - name: APP_PLAYER_POSITION
+          value: attack
+        - name: APP_PLAYER_SKILL
+          value: "2"
         ports:
         - name: nginx
           containerPort: 80
@@ -81,5 +97,13 @@ spec:
           httpGet:
             path: /healthz
             port: nginx
-          initialDelaySeconds: 3
-          periodSeconds: 3
+          initialDelaySeconds: 10
+          periodSeconds: 5
+      volumeMounts:
+      - mountPath: /tmpfs
+        name: tmpfs
+      volumes:
+      - name: tmpfs
+        emptyDir:
+        medium: Memory
+        sizeLimit: "10Mi"

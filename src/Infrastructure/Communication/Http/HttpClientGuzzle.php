@@ -38,7 +38,8 @@ final class HttpClientGuzzle implements ServiceAccessInterface
             return json_decode($response->getBody()->getContents());
         } catch (RequestException $e) {
             $response = $e->getResponse();
-            $this->logger->error(sprintf("%s@%s, %s (%s) %s\n", $verb, $url, $e->getMessage(), json_encode($payload), isset($response) ? $response->getBody()->getContents() : '-'));
+            //$this->logger->error(sprintf("%s@%s, %s (%s) %s\n", $verb, $url, $e->getMessage(), json_encode($payload), isset($response) ? $response->getBody()->getContents() : '-'));
+            $this->logger->error(sprintf("%s@%s, %s (%s) %s\n", $verb, $url, $e->getMessage(), json_encode($payload), '-'));
 
             return null;
         }

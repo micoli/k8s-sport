@@ -92,12 +92,12 @@ final class Point implements PointInterface
         return $angle;
     }
 
-    public function moveTowards(PointInterface $finalPosition, $step)
+    public function moveTowards(PointInterface $finalCoordinates, $step)
     {
-        $distance = $this->distanceTo($finalPosition);
+        $distance = $this->distanceTo($finalCoordinates);
 
         if ($distance <= $step) {
-            $this->setCoord($finalPosition->getX(), $finalPosition->getY());
+            $this->setCoord($finalCoordinates->getX(), $finalCoordinates->getY());
 
             return 0;
         }
@@ -105,8 +105,8 @@ final class Point implements PointInterface
         $ratio = $step / $distance;
 
         $this->setCoord(
-            $this->getX() - $ratio * ($this->getX() - $finalPosition->getX()),
-            $this->getY() - $ratio * ($this->getY() - $finalPosition->getY())
+            $this->getX() - $ratio * ($this->getX() - $finalCoordinates->getX()),
+            $this->getY() - $ratio * ($this->getY() - $finalCoordinates->getY())
         );
 
         return $step;
